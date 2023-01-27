@@ -1,0 +1,46 @@
+{
+    "name": "minizord/template",
+    "description": "Apenas o template para os componentes de Minizord.",
+    "keywords": [
+        "Minizord"
+    ],
+    "type": "library",
+    "homepage": "https://github.com/MauricioRobertoDev/minizord-template",
+    "license": "MIT",
+    "scripts":{
+        "test": "vendor/bin/pest",
+        "test:coverage": "vendor/bin/pest --coverage",
+        "style:fix": "vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php --allow-risky=yes"
+    },
+    "autoload": {
+        "psr-4": {
+            "Minizord\\Template\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Minizord\\Template\\Tests\\": "tests"
+        }
+    },
+    "authors": [
+        {
+            "name": "Mauricio Roberto",
+            "email": "mauricio.roberto.dev@gmail.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^8.1"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "require-dev": {
+        "pestphp/pest": "^1.22",
+        "friendsofphp/php-cs-fixer": "^3.13"
+    },
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    }
+}
