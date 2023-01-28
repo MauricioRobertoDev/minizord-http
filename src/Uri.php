@@ -114,6 +114,14 @@ class Uri implements UriInterface
 
     public function withHost($host)
     {
+        if (!is_string($host)) {
+            throw new InvalidArgumentException('Host deve ser uma string');
+        }
+
+        $clone       = clone $this;
+        $clone->host = strtolower($host);
+
+        return $clone;
     }
 
     public function withPort($port)

@@ -199,3 +199,18 @@ test('Deve retornar uma nova instância com o (user info) passado', function () 
     expect($uri->withUserInfo('', 'pass'))->not()->toBe($uri);
     expect($uri->withUserInfo('', 'pass')->getUserInfo())->toBe('');
 });
+
+test('Deve retornar uma nova instância com o (host) passado', function () {
+    $url = 'http://example.com/path?arg=value#fragment';
+    $uri = new Uri($url);
+
+    expect($uri)->toBe($uri);
+
+    expect($uri->withHost('domain.com'))->not()->toBe($uri);
+    expect($uri->withHost('domain.com')->getHost())->toBe('domain.com');
+
+    expect($uri->withHost(''))->not()->toBe($uri);
+    expect($uri->withHost('')->getHost())->toBe('');
+
+    expect(fn () => $uri->withHost(14444))->toThrow(InvalidArgumentException::class);
+});
