@@ -2,11 +2,12 @@
 
 namespace Minizord\Http;
 
+use InvalidArgumentException;
 use Minizord\Http\Contract\UriInterface;
 
 class Uri implements UriInterface
 {
-    private const STANDARD_SCHEME_PORTS = ['http' => 80, 'https' => 443];
+    private const SCHEMES = ['http' => 80, 'https' => 443];
 
     private string $scheme;
     private string $host;
@@ -66,7 +67,7 @@ class Uri implements UriInterface
         return $this->fragment;
     }
 
-    public function getAuthority()
+    public function getAuthority() : string
     {
         $authority = '';
 
@@ -88,8 +89,18 @@ class Uri implements UriInterface
         return $this->path;
     }
 
-    public function withScheme($scheme)
+    public function withScheme($scheme) : self
     {
+        $scheme = strtolower($scheme);
+
+        if (!in_array($scheme, array_keys(self::SCHEMES))) {
+            throw new InvalidArgumentException('Scheme não inválido, os schemes suportados são: ' . join(', ', array_keys(self::SCHEMES)));
+        }
+
+        $clone         = clone $this;
+        $clone->scheme = $scheme;
+
+        return $clone;
     }
 
     public function withUserInfo($user, $password = null)
@@ -123,7 +134,7 @@ class Uri implements UriInterface
     // private
     private function setPort(?int $port) : void
     {
-        if (isset(self::STANDARD_SCHEME_PORTS[$this->scheme]) && self::STANDARD_SCHEME_PORTS[$this->scheme] === $port) {
+        if (isset(self::SCHEMES[$this->scheme]) && self::SCHEMES[$this->scheme] === $port) {
             $this->port = null;
         } else {
             $this->port = $port;

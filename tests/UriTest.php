@@ -162,3 +162,15 @@ test('Deve retornar o (path) da url correto', function () {
     $uri = new Uri($url);
     expect($uri->getPath())->toBe('%2Fpath%2Fpath%2F');
 });
+
+test('Deve retornar uma nova instância com o (scheme) passado', function () {
+    $url = 'http://example.com/path?arg=value#fragment';
+    $uri = new Uri($url);
+
+    expect($uri)->toBe($uri);
+    expect($uri->withScheme('http'))->not()->toBe($uri);
+    expect($uri->withScheme('http')->getScheme())->toBe('http');
+    expect($uri->withScheme('https'))->not()->toBe($uri);
+    expect($uri->withScheme('https')->getScheme())->toBe('https');
+    expect(fn () => $uri->withScheme('invalid_scheme'))->toThrow(InvalidArgumentException::class);
+});
