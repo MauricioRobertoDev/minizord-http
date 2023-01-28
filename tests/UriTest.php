@@ -138,17 +138,21 @@ test('Deve retornar o (authority) da url correto', function () {
 });
 
 test('Deve retornar o (path) da url correto', function () {
+    $url = 'http://example.com%2Fpath';
+    $uri = new Uri($url);
+    expect($uri->getPath())->toBe('/path');
+
     $url = 'http://example.com/path';
     $uri = new Uri($url);
-    expect($uri->getPath())->toBe('%2Fpath');
+    expect($uri->getPath())->toBe('/path');
 
     $url = 'http://example.com/path/';
     $uri = new Uri($url);
-    expect($uri->getPath())->toBe('%2Fpath%2F');
+    expect($uri->getPath())->toBe('/path/');
 
     $url = 'http://example.com/';
     $uri = new Uri($url);
-    expect($uri->getPath())->toBe('%2F');
+    expect($uri->getPath())->toBe('/');
 
     $url = 'http://example.com';
     $uri = new Uri($url);
@@ -156,11 +160,11 @@ test('Deve retornar o (path) da url correto', function () {
 
     $url = 'http://example.com/path/path';
     $uri = new Uri($url);
-    expect($uri->getPath())->toBe('%2Fpath%2Fpath');
+    expect($uri->getPath())->toBe('/path/path');
 
     $url = 'http://example.com/path/path/';
     $uri = new Uri($url);
-    expect($uri->getPath())->toBe('%2Fpath%2Fpath%2F');
+    expect($uri->getPath())->toBe('/path/path/');
 });
 
 test('Deve retornar uma nova instância com o (scheme) passado', function () {

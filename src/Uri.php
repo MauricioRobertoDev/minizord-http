@@ -7,6 +7,12 @@ use Minizord\Http\Contract\UriInterface;
 
 class Uri implements UriInterface
 {
+    //são são especificos de alguma parte da url e são usados no path, user info, query string e fragment, não precisamos encodar esses caracteres
+    private const CHAR_UNRESERVED  = 'a-zA-Z0-9\-\.\_\~';
+
+    // são usados em user info, query string e fragment por isso não devemos encodar eles ao lidar com esses tipos
+    private const CHAR_SUB_DELIMS  = '\!\$\&\'\(\)\*\+\,\;\=';
+
     private const SCHEMES = ['http' => 80, 'https' => 443];
 
     private string $scheme;
@@ -20,14 +26,14 @@ class Uri implements UriInterface
 
     public function __construct(string $url)
     {
-        $parts          = parse_url($url);
+        $parts          = parse_url(urldecode($url));
         $this->scheme   = strtolower($parts['scheme'] ?? '');
         $this->host     = strtolower($parts['host'] ?? '');
         $this->user     = $parts['user'] ?? '';
         $this->pass     = $parts['pass'] ?? '';
         $this->query    = rawurlencode(rawurldecode($parts['query'] ?? ''));
         $this->fragment = rawurlencode(rawurldecode($parts['fragment'] ?? ''));
-        $this->path     = rawurlencode(rawurldecode($parts['path'] ?? ''));
+        $this->path     =  $this->filterPath($parts['path'] ?? '');
         $this->port     = $this->filterPort($parts['port'] ?? null);
     }
 
@@ -172,6 +178,37 @@ class Uri implements UriInterface
 
     public function __toString()
     {
+        $string = '';
+
+        if ($this->getScheme()) {
+            $string .= $this->getScheme() . ':';
+        }
+
+        if ($this->getAuthority()) {
+            $string .= '//' . $this->getAuthority();
+        }
+
+        if ($this->getPath()) {
+            $path = '';
+
+            if ('/' !== $this->getPath()[0]) {
+                if ('' !== $this->getAuthority()) {
+                    $path = '/' . $this->getPath();
+                }
+            }
+
+            $string .= $path;
+        }
+
+        if ($this->getQuery() !== '') {
+            $string .= '?' . $this->getQuery();
+        }
+
+        if ($this->getFragment() !== '') {
+            $string .= '#' . $this->getFragment();
+        }
+
+        return $string;
     }
 
     private function filterPort(string|int|null $port) : ?int
@@ -191,5 +228,18 @@ class Uri implements UriInterface
         }
 
         return $port;
+    }
+
+    private function filterPath(string $path) : string
+    {
+        // está separado assim para que você possa interpretar de uma melhor forma
+        $regex = '/(?:' . '[^' . self::CHAR_UNRESERVED . self::CHAR_SUB_DELIMS . '\%\/' . ']+' . '|%(?![A-Fa-f0-9]{2})' . ')/';
+
+        return preg_replace_callback($regex, [$this, 'rawUrlEncode'], $path);
+    }
+
+    private function rawUrlEncode(array $match)
+    {
+        return rawurlencode($match[0]);
     }
 }
