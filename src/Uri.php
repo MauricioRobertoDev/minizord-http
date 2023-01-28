@@ -11,7 +11,7 @@ class Uri implements UriInterface
     public function __construct(string $url)
     {
         $parts        = parse_url($url);
-        $this->scheme = isset($parts['scheme']) ? strtolower($parts['scheme']) : '';
+        $this->scheme = strtolower($parts['scheme'] ?? '');
     }
 
     public function getScheme()
