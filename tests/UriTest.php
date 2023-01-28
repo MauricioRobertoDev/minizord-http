@@ -64,7 +64,6 @@ test('Deve retornar o (port) da url correto', function () {
 
     $url = 'http://hostname:4444/path?arg=value#anchor';
     $uri = new Uri($url);
-
     expect($uri->getPort())->toBe(4444);
 
     $url = 'http://example:80/';
@@ -86,4 +85,18 @@ test('Deve retornar o (port) da url correto', function () {
     $url = 'https://example.com/';
     $uri = new Uri($url);
     expect($uri->getPort())->toBe(null);
+});
+
+test('Deve retornar o (query) da url correto', function () {
+    $url = 'http://username:password@hostname:9090/path?arg=value#anchor';
+    $uri = new Uri($url);
+    expect($uri->getQuery())->toBe('arg%3Dvalue');
+
+    $url = 'http://hostname:4444/path?arg=value&arg2=value2#anchor';
+    $uri = new Uri($url);
+    expect($uri->getQuery())->toBe('arg%3Dvalue%26arg2%3Dvalue2');
+
+    $url = 'http://hostname:4444/path#anchor';
+    $uri = new Uri($url);
+    expect($uri->getQuery())->toBe('');
 });

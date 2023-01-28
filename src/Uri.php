@@ -13,6 +13,7 @@ class Uri implements UriInterface
     private string $user;
     private string $pass;
     private ?string $port;
+    private string $query;
 
     public function __construct(string $url)
     {
@@ -21,6 +22,7 @@ class Uri implements UriInterface
         $this->host     = strtolower($parts['host'] ?? '');
         $this->user     = $parts['user'] ?? '';
         $this->pass     = $parts['pass'] ?? '';
+        $this->query    = rawurlencode($parts['query'] ?? '');
         $this->setPort($parts['port'] ?? null);
     }
 
@@ -50,15 +52,16 @@ class Uri implements UriInterface
         return $this->port;
     }
 
+    public function getQuery() : string
+    {
+        return $this->query;
+    }
+
     public function getAuthority()
     {
     }
 
     public function getPath()
-    {
-    }
-
-    public function getQuery()
     {
     }
 
