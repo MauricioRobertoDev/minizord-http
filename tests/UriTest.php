@@ -303,3 +303,29 @@ test('Deve retornar uma nova instância com o (fragment) passado', function () {
 
     expect(fn () => $uri->withFragment(65536))->toThrow(InvalidArgumentException::class);
 });
+
+test('Deve retornar a string da uri', function () {
+    $url = 'http://example.com/path?arg=value#fragment';
+    $uri = new Uri($url);
+    expect((string) $uri)->toBe('http://example.com/path?arg=value#fragment');
+
+    $url = 'http://example.com/path/path crazy?arg=value crazy#fragment crazy';
+    $uri = new Uri($url);
+    expect((string) $uri)->toBe('http://example.com/path/path%20crazy?arg=value%20crazy#fragment%20crazy');
+
+    $url = 'http://example.com:8080/path/path?arg=value#fragment';
+    $uri = new Uri($url);
+    expect((string) $uri)->toBe('http://example.com:8080/path/path?arg=value#fragment');
+
+    $url = 'http://example.com:80/path/path?arg=value#fragment';
+    $uri = new Uri($url);
+    expect((string) $uri)->toBe('http://example.com/path/path?arg=value#fragment');
+
+    $url = 'http://user:pass@example.com:80/path/path?arg=value#fragment';
+    $uri = new Uri($url);
+    expect((string) $uri)->toBe('http://user:pass@example.com/path/path?arg=value#fragment');
+
+    $url = 'http://:pass@example.com:80/path/path?arg=value#fragment';
+    $uri = new Uri($url);
+    expect((string) $uri)->toBe('http://example.com/path/path?arg=value#fragment');
+});

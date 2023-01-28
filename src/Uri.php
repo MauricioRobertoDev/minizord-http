@@ -180,31 +180,29 @@ class Uri implements UriInterface
     {
         $string = '';
 
-        if ($this->getScheme()) {
+        if ($this->getScheme() != null) {
             $string .= $this->getScheme() . ':';
         }
 
-        if ($this->getAuthority()) {
+        if ($this->getAuthority() != null) {
             $string .= '//' . $this->getAuthority();
         }
 
-        if ($this->getPath()) {
+        if ($this->getPath() != null) {
             $path = '';
 
-            if ('/' !== $this->getPath()[0]) {
-                if ('' !== $this->getAuthority()) {
-                    $path = '/' . $this->getPath();
-                }
+            if ($this->getAuthority()) {
+                $path = '/' . ltrim($this->getPath(), '/');
             }
 
             $string .= $path;
         }
 
-        if ($this->getQuery() !== '') {
+        if ($this->getQuery() != null) {
             $string .= '?' . $this->getQuery();
         }
 
-        if ($this->getFragment() !== '') {
+        if ($this->getFragment() != null) {
             $string .= '#' . $this->getFragment();
         }
 
