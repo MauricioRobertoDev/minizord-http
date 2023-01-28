@@ -55,6 +55,10 @@ test('Deve retornar o (user info) da url correto', function () {
     $url = 'http://:password@example.com/';
     $uri = new Uri($url);
     expect($uri->getUserInfo())->toBe('');
+
+    $url = 'username:password@hostname:9090/';
+    $uri = new Uri($url);
+    expect($uri->getUserInfo())->toBe('');
 });
 
 test('Deve retornar o (port) da url correto', function () {
@@ -109,4 +113,26 @@ test('Deve retornar o (fragment) da url correto', function () {
     $url = 'http://hostname:4444/path?arg=value&arg2=value2#anchõr';
     $uri = new Uri($url);
     expect($uri->getFragment())->toBe('anch%C3%B5r');
+});
+
+test('Deve retornar o (authority) da url correto', function () {
+    $url = 'http://username:password@hostname:9090/';
+    $uri = new Uri($url);
+    expect($uri->getAuthority())->toBe('username:password@hostname:9090');
+
+    $url = 'http://username@hostname:9090/';
+    $uri = new Uri($url);
+    expect($uri->getAuthority())->toBe('username@hostname:9090');
+
+    $url = 'http://:password@hostname:9090/';
+    $uri = new Uri($url);
+    expect($uri->getAuthority())->toBe('hostname:9090');
+
+    $url = 'http://username:password@hostname:80/';
+    $uri = new Uri($url);
+    expect($uri->getAuthority())->toBe('username:password@hostname');
+
+    $url = 'https://username:password@hostname:443/';
+    $uri = new Uri($url);
+    expect($uri->getAuthority())->toBe('username:password@hostname');
 });
