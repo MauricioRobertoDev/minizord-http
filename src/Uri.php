@@ -89,22 +89,27 @@ class Uri implements UriInterface
         return $this->path;
     }
 
-    public function withScheme($scheme) : self
+    public function withScheme($scheme) : Uri
     {
-        $scheme = strtolower($scheme);
+        $scheme        = strtolower($scheme);
+        $clone         = clone $this;
 
-        if (!in_array($scheme, array_keys(self::SCHEMES))) {
+        if ($scheme !== null && $scheme !== '' && !in_array($scheme, array_keys(self::SCHEMES))) {
             throw new InvalidArgumentException('Scheme não inválido, os schemes suportados são: ' . join(', ', array_keys(self::SCHEMES)));
         }
 
-        $clone         = clone $this;
         $clone->scheme = $scheme;
 
         return $clone;
     }
 
-    public function withUserInfo($user, $password = null)
+    public function withUserInfo($user, $password = null) : Uri
     {
+        $clone           = clone $this;
+        $clone->user     = $user;
+        $clone->pass     = $password;
+
+        return $clone;
     }
 
     public function withHost($host)

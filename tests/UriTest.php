@@ -168,9 +168,15 @@ test('Deve retornar uma nova instância com o (scheme) passado', function () {
     $uri = new Uri($url);
 
     expect($uri)->toBe($uri);
+
+    expect($uri->withScheme(''))->not()->toBe($uri);
+    expect($uri->withScheme('')->getScheme())->toBe('');
+
     expect($uri->withScheme('http'))->not()->toBe($uri);
     expect($uri->withScheme('http')->getScheme())->toBe('http');
+
     expect($uri->withScheme('https'))->not()->toBe($uri);
     expect($uri->withScheme('https')->getScheme())->toBe('https');
+
     expect(fn () => $uri->withScheme('invalid_scheme'))->toThrow(InvalidArgumentException::class);
 });
