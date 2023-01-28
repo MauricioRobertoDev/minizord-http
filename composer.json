@@ -14,12 +14,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Minizord\\Template\\": "src/"
+            "Minizord\\Http\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Minizord\\Template\\Tests\\": "tests"
+            "Minizord\\Http\\Tests\\": "tests"
         }
     },
     "authors": [
