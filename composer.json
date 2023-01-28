@@ -8,7 +8,7 @@
     "homepage": "https://github.com/MauricioRobertoDev/minizord-template",
     "license": "MIT",
     "scripts":{
-        "test": "vendor/bin/pest",
+        "test": "clear && vendor/bin/pest",
         "test:coverage": "vendor/bin/pest --coverage",
         "style:fix": "vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php --allow-risky=yes"
     },
@@ -19,7 +19,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Minizord\\Http\\Tests\\": "tests"
+            "Minizord\\Http\\Tests\\": "tests/"
         }
     },
     "authors": [
