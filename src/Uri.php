@@ -25,9 +25,9 @@ class Uri implements UriInterface
         $this->host     = strtolower($parts['host'] ?? '');
         $this->user     = $parts['user'] ?? '';
         $this->pass     = $parts['pass'] ?? '';
-        $this->query    = rawurlencode($parts['query'] ?? '');
-        $this->fragment = rawurlencode($parts['fragment'] ?? '');
-        $this->path     = rawurlencode($parts['path'] ?? '');
+        $this->query    = rawurlencode(rawurldecode($parts['query'] ?? ''));
+        $this->fragment = rawurlencode(rawurldecode($parts['fragment'] ?? ''));
+        $this->path     = rawurlencode(rawurldecode($parts['path'] ?? ''));
         $this->port     = $this->filterPort($parts['port'] ?? null);
     }
 
@@ -134,8 +134,16 @@ class Uri implements UriInterface
         return $clone;
     }
 
-    public function withPath($path)
+    public function withPath($path) : Uri
     {
+        if (!is_string($path)) {
+            throw new InvalidArgumentException('Path deve ser uma string');
+        }
+
+        $clone       = clone $this;
+        $clone->path = rawurlencode(rawurldecode($path));
+
+        return $clone;
     }
 
     public function withQuery($query)
