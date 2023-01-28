@@ -100,3 +100,13 @@ test('Deve retornar o (query) da url correto', function () {
     $uri = new Uri($url);
     expect($uri->getQuery())->toBe('');
 });
+
+test('Deve retornar o (fragment) da url correto', function () {
+    $url = 'http://username:password@hostname:9090/path?arg=value#anchor';
+    $uri = new Uri($url);
+    expect($uri->getFragment())->toBe('anchor');
+
+    $url = 'http://hostname:4444/path?arg=value&arg2=value2#anchõr';
+    $uri = new Uri($url);
+    expect($uri->getFragment())->toBe('anch%C3%B5r');
+});
