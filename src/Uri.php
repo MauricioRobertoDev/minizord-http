@@ -6,10 +6,13 @@ use Minizord\Http\Contract\UriInterface;
 
 class Uri implements UriInterface
 {
+    private const STANDARD_SCHEME_PORTS = ['http' => 80, 'https' => 443];
+
     private string $scheme;
     private string $host;
     private string $user;
     private string $pass;
+    private ?string $port;
 
     public function __construct(string $url)
     {
@@ -18,6 +21,7 @@ class Uri implements UriInterface
         $this->host     = strtolower($parts['host'] ?? '');
         $this->user     = $parts['user'] ?? '';
         $this->pass     = $parts['pass'] ?? '';
+        $this->setPort($parts['port'] ?? null);
     }
 
     public function getScheme() : string
@@ -41,11 +45,12 @@ class Uri implements UriInterface
         return $userinfo;
     }
 
-    public function getAuthority()
+    public function getPort() : null|int
     {
+        return $this->port;
     }
 
-    public function getPort()
+    public function getAuthority()
     {
     }
 
@@ -91,5 +96,15 @@ class Uri implements UriInterface
 
     public function __toString()
     {
+    }
+
+    // private
+    private function setPort(?int $port) : void
+    {
+        if (isset(self::STANDARD_SCHEME_PORTS[$this->scheme]) && self::STANDARD_SCHEME_PORTS[$this->scheme] === $port) {
+            $this->port = null;
+        } else {
+            $this->port = $port;
+        }
     }
 }
