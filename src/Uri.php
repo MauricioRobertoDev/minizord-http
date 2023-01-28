@@ -15,13 +15,60 @@ class Uri implements UriInterface
 
     private const SCHEMES = ['http' => 80, 'https' => 443];
 
+    /**
+     * Scheme da uri, http ou https.
+     *
+     * @var string
+     */
     private string $scheme;
+
+    /**
+     * Basicamente o domínio, mas pode ser um número como ip.
+     *
+     * @var string
+     */
     private string $host;
+
+    /**
+     * Usuário para autenticação.
+     *
+     * @var string
+     */
     private string $user;
+
+    /**
+     * Senha para autenticação.
+     *
+     * @var string|null
+     */
     private ?string $pass;
+
+    /**
+     * Porta.
+     *
+     * @var string|null
+     */
     private ?string $port;
+
+    /**
+     * Query string, o que vem depois do ?
+     *
+     * @var string
+     */
     private string $query;
+
+    /**
+     * Fragment, o que vem depois do #.
+     *
+     * @var string
+     */
     private string $fragment;
+
+    /**
+     * Caminho da uri, logo cochecido como o /alguma-coisa.
+     *
+     * @var string
+     */
     private string $path;
 
     public function __construct(string $url)
@@ -37,16 +84,31 @@ class Uri implements UriInterface
         $this->port     = $this->filterPort($parts['port'] ?? null);
     }
 
+    /**
+     * Retorna o scheme.
+     *
+     * @return string
+     */
     public function getScheme() : string
     {
         return $this->scheme;
     }
 
+    /**
+     * Retorna o host.
+     *
+     * @return string
+     */
     public function getHost() : string
     {
         return $this->host;
     }
 
+    /**
+     * Retorna o usuário e senha caso tenha username[:password].
+     *
+     * @return string
+     */
     public function getUserInfo() : string
     {
         $userinfo = $this->user;
@@ -58,21 +120,41 @@ class Uri implements UriInterface
         return $userinfo;
     }
 
+    /**
+     * Retorna a porta caso exista e não seja a padrão.
+     *
+     * @return null|int
+     */
     public function getPort() : null|int
     {
         return $this->port;
     }
 
+    /**
+     * Retorna a query string.
+     *
+     * @return string
+     */
     public function getQuery() : string
     {
         return $this->query;
     }
 
+    /**
+     * Retorna o fragment.
+     *
+     * @return string
+     */
     public function getFragment() : string
     {
         return $this->fragment;
     }
 
+    /**
+     * Retorna a autoridade no formato: [user-info@]host[:port].
+     *
+     * @return string
+     */
     public function getAuthority() : string
     {
         $authority = '';
@@ -90,11 +172,22 @@ class Uri implements UriInterface
         return $authority;
     }
 
+    /**
+     * Retorna o path.
+     *
+     * @return string
+     */
     public function getPath() : string
     {
         return $this->path;
     }
 
+    /**
+     * Retorna uma nova instância com o scheme passado.
+     *
+     * @param  string $scheme
+     * @return Uri
+     */
     public function withScheme($scheme) : Uri
     {
         $scheme        = strtolower($scheme);
@@ -109,6 +202,13 @@ class Uri implements UriInterface
         return $clone;
     }
 
+    /**
+     * Retorna uma nova instância com o user-info passado.
+     *
+     * @param  string $user
+     * @param  string $password
+     * @return Uri
+     */
     public function withUserInfo($user, $password = null) : Uri
     {
         $clone           = clone $this;
@@ -118,6 +218,12 @@ class Uri implements UriInterface
         return $clone;
     }
 
+    /**
+     * Retorna uma nova instância com o host passado.
+     *
+     * @param  string $host
+     * @return Uri
+     */
     public function withHost($host) : Uri
     {
         if (!is_string($host)) {
@@ -130,6 +236,12 @@ class Uri implements UriInterface
         return $clone;
     }
 
+    /**
+     * Retorna uma nova instância com a porta passada.
+     *
+     * @param  string|int $port
+     * @return Uri
+     */
     public function withPort($port) : Uri
     {
         $port = $this->filterPort($port);
@@ -140,6 +252,12 @@ class Uri implements UriInterface
         return $clone;
     }
 
+    /**
+     * Retorna uma nova instância com o path passado.
+     *
+     * @param  string $path
+     * @return Uri
+     */
     public function withPath($path) : Uri
     {
         if (!is_string($path)) {
@@ -152,6 +270,12 @@ class Uri implements UriInterface
         return $clone;
     }
 
+    /**
+     * Retorna uma nova instância com a query-string passada.
+     *
+     * @param  string $query
+     * @return void
+     */
     public function withQuery($query)
     {
         if (!is_string($query)) {
@@ -164,6 +288,12 @@ class Uri implements UriInterface
         return $clone;
     }
 
+    /**
+     * Retorna uma nova instância com o fragment passado.
+     *
+     * @param  string $fragment
+     * @return void
+     */
     public function withFragment($fragment)
     {
         if (!is_string($fragment)) {
@@ -176,6 +306,11 @@ class Uri implements UriInterface
         return $clone;
     }
 
+    /**
+     * Retorna uma string com dados da uri.
+     *
+     * @return string
+     */
     public function __toString()
     {
         $string = '';
@@ -209,6 +344,12 @@ class Uri implements UriInterface
         return $string;
     }
 
+    /**
+     * Retorna uma porta filtrada e null caso seja a padrão.
+     *
+     * @param  string|int|null $port
+     * @return int|null
+     */
     private function filterPort(string|int|null $port) : ?int
     {
         if (null === $port) {
@@ -228,6 +369,12 @@ class Uri implements UriInterface
         return $port;
     }
 
+    /**
+     * Retorna o path formatado pela RFC 3986.
+     *
+     * @param  string $path
+     * @return string
+     */
     private function filterPath(string $path) : string
     {
         // está separado assim para que você possa interpretar de uma melhor forma
@@ -236,6 +383,12 @@ class Uri implements UriInterface
         return preg_replace_callback($regex, [$this, 'rawUrlEncode'], $path);
     }
 
+    /**
+     * Retorna a query stirng ou fragment formatado pela RFC 3986.
+     *
+     * @param  string $string
+     * @return string
+     */
     private function filterQueryAndFragment(string $string) : string
     {
         $string = ltrim(ltrim($string, '?'), '#');
@@ -245,6 +398,12 @@ class Uri implements UriInterface
         return preg_replace_callback($regex, [$this, 'rawUrlEncode'], $string);
     }
 
+    /**
+     * Formata os caracteres para se adequarem a RFC 3986.
+     *
+     * @param  array $match
+     * @return void
+     */
     private function rawUrlEncode(array $match)
     {
         return rawurlencode($match[0]);
