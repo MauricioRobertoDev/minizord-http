@@ -7,11 +7,13 @@ use Minizord\Http\Contract\UriInterface;
 class Uri implements UriInterface
 {
     private string $scheme;
+    private string $host;
 
     public function __construct(string $url)
     {
         $parts        = parse_url($url);
         $this->scheme = strtolower($parts['scheme'] ?? '');
+        $this->host   = strtolower($parts['host'] ?? '');
     }
 
     public function getScheme()
@@ -29,6 +31,7 @@ class Uri implements UriInterface
 
     public function getHost()
     {
+        return $this->host;
     }
 
     public function getPort()

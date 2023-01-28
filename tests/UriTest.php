@@ -27,3 +27,20 @@ test('Deve retornar o scheme da url correto e normalizado', function () {
 
     expect($uri->getScheme())->toBe('');
 });
+
+test('Deve retornar o host da url correto e normalizado', function () {
+    $url = 'https://domain.com.br/nothing/?query=query_value#fragment';
+    $uri = new Uri($url);
+
+    expect($uri->getHost())->toBe('domain.com.br');
+
+    $url = 'https://domain.com/nothing/?query=query_value#fragment';
+    $uri = new Uri($url);
+
+    expect($uri->getHost())->toBe('domain.com');
+
+    $url = '/nothing/?query=query_value#fragment';
+    $uri = new Uri($url);
+
+    expect($uri->getHost())->toBe('');
+});
