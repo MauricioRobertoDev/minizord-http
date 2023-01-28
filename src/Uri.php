@@ -15,6 +15,7 @@ class Uri implements UriInterface
     private ?string $port;
     private string $query;
     private string $fragment;
+    private string $path;
 
     public function __construct(string $url)
     {
@@ -25,6 +26,7 @@ class Uri implements UriInterface
         $this->pass     = $parts['pass'] ?? '';
         $this->query    = rawurlencode($parts['query'] ?? '');
         $this->fragment = rawurlencode($parts['fragment'] ?? '');
+        $this->path     = rawurlencode($parts['path'] ?? '');
         $this->setPort($parts['port'] ?? null);
     }
 
@@ -81,8 +83,9 @@ class Uri implements UriInterface
         return $authority;
     }
 
-    public function getPath()
+    public function getPath() : string
     {
+        return $this->path;
     }
 
     public function withScheme($scheme)

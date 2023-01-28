@@ -136,3 +136,29 @@ test('Deve retornar o (authority) da url correto', function () {
     $uri = new Uri($url);
     expect($uri->getAuthority())->toBe('username:password@hostname');
 });
+
+test('Deve retornar o (path) da url correto', function () {
+    $url = 'http://example.com/path';
+    $uri = new Uri($url);
+    expect($uri->getPath())->toBe('%2Fpath');
+
+    $url = 'http://example.com/path/';
+    $uri = new Uri($url);
+    expect($uri->getPath())->toBe('%2Fpath%2F');
+
+    $url = 'http://example.com/';
+    $uri = new Uri($url);
+    expect($uri->getPath())->toBe('%2F');
+
+    $url = 'http://example.com';
+    $uri = new Uri($url);
+    expect($uri->getPath())->toBe('');
+
+    $url = 'http://example.com/path/path';
+    $uri = new Uri($url);
+    expect($uri->getPath())->toBe('%2Fpath%2Fpath');
+
+    $url = 'http://example.com/path/path/';
+    $uri = new Uri($url);
+    expect($uri->getPath())->toBe('%2Fpath%2Fpath%2F');
+});
