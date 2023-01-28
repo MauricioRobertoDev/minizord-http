@@ -148,10 +148,11 @@ Link do projeto: [https://github.com/MauricioRobertoDev/minizord-template](https
  - [Shields.io](https://shields.io/)
  - [Awesome Readme Template](https://github.com/Louis3797/awesome-readme-template)
  - [Emoji Cheat Sheet](https://github.com/ikatyang/emoji-cheat-sheet/blob/master/README.md#travel--places)
-  - [Pest PHP](https://github.com/pestphp/pest)
+ - [Pest PHP](https://github.com/pestphp/pest)
 
 <br>
 
 <!-- References -->
 ## :microscope: Referências
- - [Exemplo](https://google.com/)
+ - [Regex101](https://regex101.com/)
+ - [Pinoy Code Streamer](https://www.youtube.com/watch?v=6VAAyuVsDco)
