@@ -8,30 +8,41 @@ class Uri implements UriInterface
 {
     private string $scheme;
     private string $host;
+    private string $user;
+    private string $pass;
 
     public function __construct(string $url)
     {
-        $parts        = parse_url($url);
-        $this->scheme = strtolower($parts['scheme'] ?? '');
-        $this->host   = strtolower($parts['host'] ?? '');
+        $parts          = parse_url($url);
+        $this->scheme   = strtolower($parts['scheme'] ?? '');
+        $this->host     = strtolower($parts['host'] ?? '');
+        $this->user     = $parts['user'] ?? '';
+        $this->pass     = $parts['pass'] ?? '';
     }
 
-    public function getScheme()
+    public function getScheme() : string
     {
         return $this->scheme;
     }
 
-    public function getAuthority()
-    {
-    }
-
-    public function getUserInfo()
-    {
-    }
-
-    public function getHost()
+    public function getHost() : string
     {
         return $this->host;
+    }
+
+    public function getUserInfo() : string
+    {
+        $userinfo = $this->user;
+
+        if ($this->user && $this->pass != '') {
+            $userinfo .= ':' . $this->pass;
+        }
+
+        return $userinfo;
+    }
+
+    public function getAuthority()
+    {
     }
 
     public function getPort()
