@@ -214,3 +214,28 @@ test('Deve retornar uma nova instância com o (host) passado', function () {
 
     expect(fn () => $uri->withHost(14444))->toThrow(InvalidArgumentException::class);
 });
+
+test('Deve retornar uma nova instância com o (port) passado', function () {
+    $url = 'http://example.com/path?arg=value#fragment';
+    $uri = new Uri($url);
+
+    expect($uri)->toBe($uri);
+
+    expect($uri->withPort('any_string'))->not()->toBe($uri);
+    expect($uri->withPort('any_string')->getPort())->toBe(0);
+
+    expect($uri->withPort('80'))->not()->toBe($uri);
+    expect($uri->withPort('80')->getPort())->toBe(null);
+
+    expect($uri->withPort(80))->not()->toBe($uri);
+    expect($uri->withPort(80)->getPort())->toBe(null);
+
+    expect($uri->withPort('8080'))->not()->toBe($uri);
+    expect($uri->withPort('8080')->getPort())->toBe(8080);
+
+    expect($uri->withPort(8080))->not()->toBe($uri);
+    expect($uri->withPort(8080)->getPort())->toBe(8080);
+
+    expect(fn () => $uri->withPort(-1))->toThrow(InvalidArgumentException::class);
+    expect(fn () => $uri->withPort(65536))->toThrow(InvalidArgumentException::class);
+});

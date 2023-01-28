@@ -28,7 +28,7 @@ class Uri implements UriInterface
         $this->query    = rawurlencode($parts['query'] ?? '');
         $this->fragment = rawurlencode($parts['fragment'] ?? '');
         $this->path     = rawurlencode($parts['path'] ?? '');
-        $this->setPort($parts['port'] ?? null);
+        $this->port     = $this->filterPort($parts['port'] ?? null);
     }
 
     public function getScheme() : string
@@ -112,7 +112,7 @@ class Uri implements UriInterface
         return $clone;
     }
 
-    public function withHost($host)
+    public function withHost($host) : Uri
     {
         if (!is_string($host)) {
             throw new InvalidArgumentException('Host deve ser uma string');
@@ -124,8 +124,14 @@ class Uri implements UriInterface
         return $clone;
     }
 
-    public function withPort($port)
+    public function withPort($port) : Uri
     {
+        $port = $this->filterPort($port);
+
+        $clone       = clone $this;
+        $clone->port = $port;
+
+        return $clone;
     }
 
     public function withPath($path)
@@ -144,13 +150,22 @@ class Uri implements UriInterface
     {
     }
 
-    // private
-    private function setPort(?int $port) : void
+    private function filterPort(string|int|null $port) : ?int
     {
-        if (isset(self::SCHEMES[$this->scheme]) && self::SCHEMES[$this->scheme] === $port) {
-            $this->port = null;
-        } else {
-            $this->port = $port;
+        if (null === $port) {
+            return null;
         }
+
+        $port = (int) $port; // se for uma string que não é um número $port será 0
+        if ($port < 0 || $port > 65535) {
+            throw new InvalidArgumentException('Porta inválida: ' . $port . '. Deve estar entre 0 e 65535');
+        }
+
+        // é uma porta padrão
+        if (isset(self::SCHEMES[$this->scheme]) && self::SCHEMES[$this->scheme] === $port) {
+            return null;
+        }
+
+        return $port;
     }
 }
