@@ -257,3 +257,21 @@ test('Deve retornar uma nova instância com o (path) passado', function () {
 
     expect(fn () => $uri->withPath(65536))->toThrow(InvalidArgumentException::class);
 });
+
+test('Deve retornar uma nova instância com o (query) passado', function () {
+    $url = 'http://example.com/path?arg=value#fragment';
+    $uri = new Uri($url);
+
+    expect($uri)->toBe($uri);
+
+    expect($uri->withQuery('arg=value'))->not()->toBe($uri);
+    expect($uri->withQuery('arg=value')->getQuery())->toBe('arg%3Dvalue');
+
+    expect($uri->withQuery('arg = value'))->not()->toBe($uri);
+    expect($uri->withQuery('arg = value')->getQuery())->toBe('arg%20%3D%20value');
+
+    expect($uri->withQuery('arg%20%3D%20value'))->not()->toBe($uri);
+    expect($uri->withQuery('arg%20%3D%20value')->getQuery())->toBe('arg%20%3D%20value');
+
+    expect(fn () => $uri->withQuery(65536))->toThrow(InvalidArgumentException::class);
+});

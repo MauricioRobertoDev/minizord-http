@@ -148,6 +148,14 @@ class Uri implements UriInterface
 
     public function withQuery($query)
     {
+        if (!is_string($query)) {
+            throw new InvalidArgumentException('Query deve ser uma string');
+        }
+
+        $clone        = clone $this;
+        $clone->query = rawurlencode(rawurldecode($query));
+
+        return $clone;
     }
 
     public function withFragment($fragment)
