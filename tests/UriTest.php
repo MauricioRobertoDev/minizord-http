@@ -94,11 +94,11 @@ test('Deve retornar o (port) da url correto', function () {
 test('Deve retornar o (query) da url correto', function () {
     $url = 'http://username:password@hostname:9090/path?arg=value#anchor';
     $uri = new Uri($url);
-    expect($uri->getQuery())->toBe('arg%3Dvalue');
+    expect($uri->getQuery())->toBe('arg=value');
 
     $url = 'http://hostname:4444/path?arg=value&arg2=value2#anchor';
     $uri = new Uri($url);
-    expect($uri->getQuery())->toBe('arg%3Dvalue%26arg2%3Dvalue2');
+    expect($uri->getQuery())->toBe('arg=value&arg2=value2');
 
     $url = 'http://hostname:4444/path#anchor';
     $uri = new Uri($url);
@@ -268,11 +268,14 @@ test('Deve retornar uma nova instância com o (query) passado', function () {
 
     expect($uri)->toBe($uri);
 
+    expect($uri->withQuery('?arg=value'))->not()->toBe($uri);
+    expect($uri->withQuery('?arg=value')->getQuery())->toBe('arg=value');
+
     expect($uri->withQuery('arg=value'))->not()->toBe($uri);
-    expect($uri->withQuery('arg=value')->getQuery())->toBe('arg%3Dvalue');
+    expect($uri->withQuery('arg=value')->getQuery())->toBe('arg=value');
 
     expect($uri->withQuery('arg = value'))->not()->toBe($uri);
-    expect($uri->withQuery('arg = value')->getQuery())->toBe('arg%20%3D%20value');
+    expect($uri->withQuery('arg = value')->getQuery())->toBe('arg%20=%20value');
 
     expect($uri->withQuery('arg%20%3D%20value'))->not()->toBe($uri);
     expect($uri->withQuery('arg%20%3D%20value')->getQuery())->toBe('arg%20%3D%20value');
@@ -285,6 +288,9 @@ test('Deve retornar uma nova instância com o (fragment) passado', function () {
     $uri = new Uri($url);
 
     expect($uri)->toBe($uri);
+
+    expect($uri->withFragment('#fragment'))->not()->toBe($uri);
+    expect($uri->withFragment('#fragment')->getFragment())->toBe('fragment');
 
     expect($uri->withFragment('fragment'))->not()->toBe($uri);
     expect($uri->withFragment('fragment')->getFragment())->toBe('fragment');

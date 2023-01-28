@@ -31,9 +31,9 @@ class Uri implements UriInterface
         $this->host     = strtolower($parts['host'] ?? '');
         $this->user     = $parts['user'] ?? '';
         $this->pass     = $parts['pass'] ?? '';
-        $this->query    = rawurlencode(rawurldecode($parts['query'] ?? ''));
-        $this->fragment = rawurlencode(rawurldecode($parts['fragment'] ?? ''));
-        $this->path     =  $this->filterPath($parts['path'] ?? '');
+        $this->query    = $this->filterQueryAndFragment($parts['query'] ?? '');
+        $this->fragment = $this->filterQueryAndFragment($parts['fragment'] ?? '');
+        $this->path     = $this->filterPath($parts['path'] ?? '');
         $this->port     = $this->filterPort($parts['port'] ?? null);
     }
 
@@ -147,7 +147,7 @@ class Uri implements UriInterface
         }
 
         $clone       = clone $this;
-        $clone->path = rawurlencode(rawurldecode($path));
+        $clone->path = $this->filterPath($path);
 
         return $clone;
     }
@@ -159,7 +159,7 @@ class Uri implements UriInterface
         }
 
         $clone        = clone $this;
-        $clone->query = rawurlencode(rawurldecode($query));
+        $clone->query = $this->filterQueryAndFragment($query);
 
         return $clone;
     }
@@ -171,7 +171,7 @@ class Uri implements UriInterface
         }
 
         $clone           = clone $this;
-        $clone->fragment = rawurlencode(rawurldecode($fragment));
+        $clone->fragment =  $this->filterQueryAndFragment($fragment);
 
         return $clone;
     }
@@ -233,9 +233,18 @@ class Uri implements UriInterface
     private function filterPath(string $path) : string
     {
         // está separado assim para que você possa interpretar de uma melhor forma
-        $regex = '/(?:' . '[^' . self::CHAR_UNRESERVED . self::CHAR_SUB_DELIMS . '\%\/' . ']+' . '|%(?![A-Fa-f0-9]{2})' . ')/';
+        $regex = '/(?:' . '[^' . self::CHAR_UNRESERVED . self::CHAR_SUB_DELIMS . '\%\/\@' . ']+' . '|%(?![A-Fa-f0-9]{2})' . ')/';
 
         return preg_replace_callback($regex, [$this, 'rawUrlEncode'], $path);
+    }
+
+    private function filterQueryAndFragment(string $string) : string
+    {
+        $string = ltrim(ltrim($string, '?'), '#');
+        // está separado assim para que você possa interpretar de uma melhor forma
+        $regex = '/(?:' . '[^' . self::CHAR_UNRESERVED . self::CHAR_SUB_DELIMS . '\%\/\@\?' . ']+' . '|%(?![A-Fa-f0-9]{2})' . ')/';
+
+        return preg_replace_callback($regex, [$this, 'rawUrlEncode'], $string);
     }
 
     private function rawUrlEncode(array $match)
