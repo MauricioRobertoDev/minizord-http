@@ -12,7 +12,7 @@ class Uri implements UriInterface
     private string $scheme;
     private string $host;
     private string $user;
-    private string $pass;
+    private ?string $pass;
     private ?string $port;
     private string $query;
     private string $fragment;
@@ -107,7 +107,7 @@ class Uri implements UriInterface
     {
         $clone           = clone $this;
         $clone->user     = $user;
-        $clone->pass     = $password;
+        $clone->pass     = $user ? $password : null;
 
         return $clone;
     }

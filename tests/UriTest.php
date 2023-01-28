@@ -180,3 +180,22 @@ test('Deve retornar uma nova instância com o (scheme) passado', function () {
 
     expect(fn () => $uri->withScheme('invalid_scheme'))->toThrow(InvalidArgumentException::class);
 });
+
+test('Deve retornar uma nova instância com o (user info) passado', function () {
+    $url = 'http://username:password@example.com/path?arg=value#fragment';
+    $uri = new Uri($url);
+
+    expect($uri)->toBe($uri);
+
+    expect($uri->withUserInfo(''))->not()->toBe($uri);
+    expect($uri->withUserInfo('')->getUserInfo())->toBe('');
+
+    expect($uri->withUserInfo('user'))->not()->toBe($uri);
+    expect($uri->withUserInfo('user')->getUserInfo())->toBe('user');
+
+    expect($uri->withUserInfo('user', 'pass'))->not()->toBe($uri);
+    expect($uri->withUserInfo('user', 'pass')->getUserInfo())->toBe('user:pass');
+
+    expect($uri->withUserInfo('', 'pass'))->not()->toBe($uri);
+    expect($uri->withUserInfo('', 'pass')->getUserInfo())->toBe('');
+});
