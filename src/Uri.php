@@ -160,6 +160,14 @@ class Uri implements UriInterface
 
     public function withFragment($fragment)
     {
+        if (!is_string($fragment)) {
+            throw new InvalidArgumentException('Fragment deve ser uma string');
+        }
+
+        $clone           = clone $this;
+        $clone->fragment = rawurlencode(rawurldecode($fragment));
+
+        return $clone;
     }
 
     public function __toString()
