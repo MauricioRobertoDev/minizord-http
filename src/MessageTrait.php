@@ -7,8 +7,9 @@ use Psr\Http\Message\StreamInterface as PsrStreamInterface;
 
 trait MessageTrait
 {
-    protected string $protocol = '1.1';
-    protected array $headers   = [];
+    protected string $protocol   = '1.1';
+    protected array $headers     = [];
+    protected array $headerNames = [];
     protected PsrStreamInterface $body;
 
     public function getProtocolVersion() : string
@@ -32,13 +33,13 @@ trait MessageTrait
 
     public function hasHeader($name) : bool
     {
-        return isset($this->headers[strtolower($name)]);
+        return $this->getOriginalHeaderName($name) ?? false;
     }
 
     public function getHeader($name) : array
     {
         if ($this->hasHeader($name)) {
-            return $this->headers[$name];
+            return $this->headers[$this->getOriginalHeaderName($name)];
         }
 
         return [];
@@ -62,8 +63,9 @@ trait MessageTrait
         $name  = $this->filterHeaderName($name);
         $value = $this->filterHeaderValue($value);
 
-        $clone                 = clone $this;
-        $clone->headers[$name] = $value;
+        $clone                                 = clone $this;
+        $clone->headerNames[strtolower($name)] = $name;
+        $clone->headers[$name]                 = $value;
 
         return $clone;
     }
@@ -78,13 +80,12 @@ trait MessageTrait
             throw new InvalidArgumentException('Argumento 2 deve ser uma string ou um array de strings');
         }
 
-        $name = strtolower($name);
-        if (is_string($value)) {
-            $value = [$value];
-        }
+        $name  = $this->filterHeaderName($name);
+        $value = $this->filterHeaderValue($value);
 
-        $clone                 = clone $this;
-        $clone->headers[$name] = array_merge($this->getHeader($name), $value);
+        $clone                                 = clone $this;
+        $clone->headerNames[strtolower($name)] = $name;
+        $clone->headers[$name]                 = array_merge($this->getHeader($name), $value);
 
         return $clone;
     }
@@ -92,7 +93,7 @@ trait MessageTrait
     public function withoutHeader($name) : self
     {
         $clone = clone $this;
-        unset($clone->headers[strtolower(($name))]);
+        unset($clone->headers[$this->getOriginalHeaderName(($name))]);
 
         return $clone;
     }
@@ -119,10 +120,10 @@ trait MessageTrait
 
     private function filterHeaderName(string $name) : string
     {
-        $name = trim($name);
+        $name = trim((string) $name, " \t");
 
         if (!preg_match("/^[a-zA-Z0-9'`#$%&*+\.^_|~!\-]+$/", $name)) {
-            throw new InvalidArgumentException('Nome do header deve estar de acordo com a RFC 7230', 1);
+            throw new InvalidArgumentException('Nome do header deve estar de acordo com a RFC 7230');
         }
 
         return $name;
@@ -135,12 +136,17 @@ trait MessageTrait
         }
 
         foreach ($value as $content) {
-            $content = trim($content);
+            $content = trim((string) $content, " \t");
             if (!preg_match("/^[\x{09}\x{20}\x{21}\x{23}-\x{7E}]+$/u", $content)) {
-                throw new InvalidArgumentException('O conteúdo do header deve estar de acordo com a RFC 7230', 1);
+                throw new InvalidArgumentException('O conteúdo do header deve estar de acordo com a RFC 7230');
             }
         }
 
         return $value;
+    }
+
+    private function getOriginalHeaderName(string $name) : string | null
+    {
+        return $this->headerNames[strtolower($name)] ?? null;
     }
 }
