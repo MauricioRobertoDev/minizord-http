@@ -2,6 +2,7 @@
 
 namespace Minizord\Http;
 
+use InvalidArgumentException;
 use Psr\Http\Message\StreamInterface as PsrStreamInterface;
 
 trait MessageTrait
@@ -23,32 +24,78 @@ trait MessageTrait
         return $clone;
     }
 
-    public function getHeaders()
+    public function getHeaders() : array
     {
+        return $this->headers;
     }
 
-    public function hasHeader($name)
+    public function hasHeader($name) : bool
     {
+        return isset($this->headers[strtolower($name)]);
     }
 
-    public function getHeader($name)
+    public function getHeader($name) : array
     {
+        if ($this->hasHeader($name)) {
+            return $this->headers[$name];
+        }
+
+        return [];
     }
 
-    public function getHeaderLine($name)
+    public function getHeaderLine($name) : string
     {
+        return join(', ', $this->getHeader($name));
     }
 
-    public function withHeader($name, $value)
+    public function withHeader($name, $value) : self
     {
+        if (!is_string($name)) {
+            throw new InvalidArgumentException('Argumento 1 deve ser uma string');
+        }
+
+        if (!is_string($value) && !is_array($value)) {
+            throw new InvalidArgumentException('Argumento 2 deve ser uma string ou um array de strings');
+        }
+
+        $name = strtolower($name);
+        if (is_string($value)) {
+            $value = [$value];
+        }
+
+        $clone                 = clone $this;
+        $clone->headers[$name] = $value;
+
+        return $clone;
     }
 
-    public function withAddedHeader($name, $value)
+    public function withAddedHeader($name, $value) : self
     {
+        if (!is_string($name)) {
+            throw new InvalidArgumentException('Argumento 1 deve ser uma string');
+        }
+
+        if (!is_string($value) && !is_array($value)) {
+            throw new InvalidArgumentException('Argumento 2 deve ser uma string ou um array de strings');
+        }
+
+        $name = strtolower($name);
+        if (is_string($value)) {
+            $value = [$value];
+        }
+
+        $clone                 = clone $this;
+        $clone->headers[$name] = array_merge($this->getHeader($name), $value);
+
+        return $clone;
     }
 
-    public function withoutHeader($name)
+    public function withoutHeader($name) : self
     {
+        $clone = clone $this;
+        unset($clone->headers[$name]);
+
+        return $clone;
     }
 
     public function getBody()
