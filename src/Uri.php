@@ -274,9 +274,9 @@ class Uri implements UriInterface
      * Retorna uma nova instância com a query-string passada.
      *
      * @param  string $query
-     * @return void
+     * @return Uri
      */
-    public function withQuery($query)
+    public function withQuery($query) : Uri
     {
         if (!is_string($query)) {
             throw new InvalidArgumentException('Query deve ser uma string');
@@ -292,9 +292,9 @@ class Uri implements UriInterface
      * Retorna uma nova instância com o fragment passado.
      *
      * @param  string $fragment
-     * @return void
+     * @return Uri
      */
-    public function withFragment($fragment)
+    public function withFragment($fragment) : Uri
     {
         if (!is_string($fragment)) {
             throw new InvalidArgumentException('Fragment deve ser uma string');
@@ -311,7 +311,7 @@ class Uri implements UriInterface
      *
      * @return string
      */
-    public function __toString()
+    public function __toString() : string
     {
         $string = '';
 
@@ -404,7 +404,7 @@ class Uri implements UriInterface
      * @param  array $match
      * @return void
      */
-    private function rawUrlEncode(array $match)
+    private function rawUrlEncode(array $match) : string
     {
         return rawurlencode($match[0]);
     }
