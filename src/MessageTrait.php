@@ -18,6 +18,7 @@ trait MessageTrait
 
     public function withProtocolVersion($version) : self
     {
+        $this->validateProtocolVersion($version);
         $clone           = clone $this;
         $clone->protocol = $version;
 
@@ -58,10 +59,8 @@ trait MessageTrait
             throw new InvalidArgumentException('Argumento 2 deve ser uma string ou um array de strings');
         }
 
-        $name = strtolower($name);
-        if (is_string($value)) {
-            $value = [$value];
-        }
+        $name  = $this->filterHeaderName($name);
+        $value = $this->filterHeaderValue($value);
 
         $clone                 = clone $this;
         $clone->headers[$name] = $value;
@@ -93,7 +92,7 @@ trait MessageTrait
     public function withoutHeader($name) : self
     {
         $clone = clone $this;
-        unset($clone->headers[$name]);
+        unset($clone->headers[strtolower(($name))]);
 
         return $clone;
     }
@@ -104,5 +103,44 @@ trait MessageTrait
 
     public function withBody(PsrStreamInterface $body)
     {
+    }
+
+    // private
+    private function validateProtocolVersion($version) : void
+    {
+        if (empty($version)) {
+            throw new InvalidArgumentException('Protocol version não pode ser vazio');
+        }
+
+        if (!preg_match('#^(1\.[01])$#', $version)) {
+            throw new InvalidArgumentException('Protocol version não suportado');
+        }
+    }
+
+    private function filterHeaderName(string $name) : string
+    {
+        $name = trim($name);
+
+        if (!preg_match("/^[a-zA-Z0-9'`#$%&*+\.^_|~!\-]+$/", $name)) {
+            throw new InvalidArgumentException('Nome do header deve estar de acordo com a RFC 7230', 1);
+        }
+
+        return $name;
+    }
+
+    private function filterHeaderValue(string|array $value) : array
+    {
+        if (is_string($value)) {
+            $value = [$value];
+        }
+
+        foreach ($value as $content) {
+            $content = trim($content);
+            if (!preg_match("/^[\x{09}\x{20}\x{21}\x{23}-\x{7E}]+$/u", $content)) {
+                throw new InvalidArgumentException('O conteúdo do header deve estar de acordo com a RFC 7230', 1);
+            }
+        }
+
+        return $value;
     }
 }
