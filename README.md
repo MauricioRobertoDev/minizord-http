@@ -154,5 +154,8 @@ Link do projeto: [https://github.com/MauricioRobertoDev/minizord-template](https
 
 <!-- References -->
 ## :microscope: Referências
- - [Regex101](https://regex101.com/)
- - [Pinoy Code Streamer](https://www.youtube.com/watch?v=6VAAyuVsDco)
+ - [Regex101 - Testar regex](https://regex101.com/)
+ - [Pinoy Code Streamer - implementação básica](https://www.youtube.com/watch?v=6VAAyuVsDco)
+ - [Mozilla - Visão geral do HTTP](https://developer.mozilla.org/pt-BR/docs/Web/HTTP/Overview)
+ - [Mozilla - Evolução do HTTP](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Evolution_of_HTTP)
+ - [Mozilla - Cabeçalhos HTTP](https://developer.mozilla.org/pt-BR/docs/Web/HTTP/Headers)
