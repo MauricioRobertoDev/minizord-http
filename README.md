@@ -143,6 +143,19 @@ Link do projeto: [https://github.com/MauricioRobertoDev/minizord-template](https
 
 <br>
 
+<!-- Comments -->
+## :speech_balloon: Observações
+Eu dei inicio ao projeto por este componente,  pois olhei as interfaces e pensei 'hummm.. Tem várias interfaces já definidas, é só implementar elas, deve ser fácil', não poderia estar mais enganado.
+
+Já na classe URI fui introduzido ao mundo das RFC e a primeira reação ao abrir o txt não poderia ser outra a não ser 'o que diabos é isso?', letras e mais letras com uma barra lateral que parecia que jamais terminaria.
+
+Mas claro a internet é maravilhosa e acabai encontrando sites pra facilitar a vida, só queria deixar registrado.
+
+Nesta implementação e no mundo das RFCs, percebi que algumas RFC citadas já estavam obsoletas e pensei primeiramente que deveria então criar a implementação se baseando nas novas. 
+
+Porem com pesquisa o que entendi é ser proposital, há várias RFC que ainda não foram abraçadas,  é o que acontece com a RFC 7230 que deve ser usada para  validar os headers http, ela já é obsoleta através da RFC 9112, mas aparentemente não foi muito aceita por restringir de mais os valores dos headers para apenas caracteres ASCII visíveis, enquanto a anterior permitia ASCII visíveis e mais alguns caracteres especiais. 
+<br>
+
 <!-- Acknowledgments -->
 ## :gem: Créditos/Reconhecimento
  - [Shields.io](https://shields.io/)
