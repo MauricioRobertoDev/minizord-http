@@ -167,7 +167,7 @@ trait MessageTrait
     public function withoutHeader($name) : self
     {
         $clone = clone $this;
-        unset($clone->headers[$this->getOriginalHeaderName(($name))]);
+        unset($clone->headers[$this->getOriginalHeaderName(($name))], $clone->headerNames[strtolower($name)]);
 
         return $clone;
     }
