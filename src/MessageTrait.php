@@ -26,7 +26,7 @@ trait MessageTrait
      */
     protected array $headerNames = [];
     /**
-     * Uma stream.
+     * O corpo da requisição uma stream.
      *
      * @var PsrStreamInterface
      */
@@ -121,12 +121,8 @@ trait MessageTrait
             throw new InvalidArgumentException('Argumento 2 deve ser uma string ou um array de strings');
         }
 
-        $name  = $this->filterHeaderName($name);
-        $value = $this->filterHeaderValue($value);
-
         $clone                                 = clone $this;
-        $clone->headerNames[strtolower($name)] = $name;
-        $clone->headers[$name]                 = $value;
+        $clone->setHeaders([$name => $value]);
 
         return $clone;
     }
@@ -148,12 +144,8 @@ trait MessageTrait
             throw new InvalidArgumentException('Argumento 2 deve ser uma string ou um array de strings');
         }
 
-        $name   = $this->filterHeaderName($name);
-        $values = $this->filterHeaderValue($value);
-
-        $clone                                 = clone $this;
-        $clone->headerNames[strtolower($name)] = $name;
-        $clone->headers[$name]                 = [...$this->getHeader($name), ...$values];
+        $clone   = clone $this;
+        $clone->setHeaders([$name => $value]);
 
         return $clone;
     }
@@ -179,11 +171,11 @@ trait MessageTrait
      */
     public function getBody() : PsrStreamInterface
     {
-        if (!isset($this->stream)) {
-            $this->stream = new Stream('');
+        if (!isset($this->body)) {
+            $this->body = new Stream('');
         }
 
-        return $this->stream;
+        return $this->body;
     }
 
     /**
@@ -195,7 +187,7 @@ trait MessageTrait
     public function withBody(PsrStreamInterface $body) : self
     {
         $clone         = clone $this;
-        $clone->stream = $body;
+        $clone->body   = $body;
 
         return $clone;
     }
@@ -267,5 +259,27 @@ trait MessageTrait
     private function getOriginalHeaderName(string $name) : string | null
     {
         return $this->headerNames[strtolower($name)] ?? null;
+    }
+
+    /**
+     * Adiciona vários headers ou apenas os valores caso já exista.
+     *
+     * @param  array $headers
+     * @return void
+     */
+    private function setHeaders(array $headers) : void
+    {
+        foreach ($headers as $header => $value) {
+            $header     = $this->filterHeaderName($header);
+            $value      = $this->filterHeaderValue($value);
+
+            if ($this->hasHeader($header)) {
+                $header                 = $this->getOriginalHeaderName($header);
+                $this->headers[$header] = [...$this->getHeader($header), ...$value];
+            } else {
+                $this->headerNames[strtolower($header)] = $header;
+                $this->headers[$header]                 = $value;
+            }
+        }
     }
 }
