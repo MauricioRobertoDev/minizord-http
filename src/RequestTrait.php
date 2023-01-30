@@ -114,21 +114,7 @@ trait RequestTrait
             return $clone;
         }
 
-        // nós não temos o host para preservar e nem a uri tem
-        if (!$uri->getHost()) {
-            return $clone;
-        }
-
-        // nós não temos o host mas a uri tem, nós adicionamos a porta
-        $host = $uri->getHost();
-        if ($uri->getPort()) {
-            $host .= ':' . $uri->getPort();
-        }
-
-        // removemos o header host do clone e adicionamos o que pegamos da uri
-        $clone                      = $clone->withoutHeader('host');
-        $clone->headerNames['host'] = 'Host';
-        $clone->headers['Host']     = [$host];
+        $clone->setHostFromUri();
 
         return $clone;
     }
@@ -145,5 +131,24 @@ trait RequestTrait
         if (!preg_match('/^[\!\#\$\%\&\'\*\+\-\.\^\_\`\|\~a-zA-Z0-9]+$/', $method)) {
             throw new InvalidArgumentException('O método deve ser uma string');
         }
+    }
+
+    protected function setHostFromUri() : void
+    {
+        // nós não temos o host para preservar e nem a uri tem
+        if (!$this->uri->getHost()) {
+            return;
+        }
+
+        // nós não temos o host mas a uri tem, nós adicionamos a porta
+        $host = $this->uri->getHost();
+        if ($this->uri->getPort()) {
+            $host .= ':' . $this->uri->getPort();
+        }
+
+        // removemos o header host do clone e adicionamos o que pegamos da uri
+        unset($this->headers['Host']);
+        $this->headerNames['host'] = 'Host';
+        $this->headers['Host']     = [$host];
     }
 }
