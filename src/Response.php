@@ -78,10 +78,29 @@ class Response implements ResponseInterface
         511 => 'Network Authentication Required',
     ];
 
+    /**
+     * Status code.
+     *
+     * @var int
+     */
     private $statusCode;
 
+    /**
+     * Motivo http.
+     *
+     * @var string
+     */
     private $reasonPhrase;
 
+    /**
+     * Representação de uma resposta de saída do lado do servidor.
+     *
+     * @param int         $status
+     * @param array       $headers
+     * @param string      $body
+     * @param string      $version
+     * @param string|null $reason
+     */
     public function __construct(int $status = 200, array $headers = [], $body = null, string $version = '1.1', string $reason = null)
     {
         if ($body) {
@@ -100,11 +119,23 @@ class Response implements ResponseInterface
         $this->protocol     = $version;
     }
 
+    /**
+     * Retorna o status code.
+     *
+     * @return int
+     */
     public function getStatusCode() : int
     {
         return $this->statusCode;
     }
 
+    /**
+     * Retorna uma nova instância com o status code passado.
+     *
+     * @param  int    $code
+     * @param  string $reasonPhrase
+     * @return self
+     */
     public function withStatus($code, $reasonPhrase = '') : self
     {
         if (!is_int($code) && !is_string($code)) {
@@ -129,8 +160,13 @@ class Response implements ResponseInterface
         return $clone;
     }
 
-     public function getReasonPhrase() : string
-     {
-         return $this->reasonPhrase;
-     }
+    /**
+     * Retorna a reason phrase, motivo ex. OK, Not Found, Bad Request...
+     *
+     * @return string
+     */
+    public function getReasonPhrase() : string
+    {
+        return $this->reasonPhrase;
+    }
 }
