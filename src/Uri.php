@@ -5,6 +5,9 @@ namespace Minizord\Http;
 use InvalidArgumentException;
 use Minizord\Http\Contract\UriInterface;
 
+/**
+ * Essa classe é um value object representando uma uri.
+ */
 class Uri implements UriInterface
 {
     //são são especificos de alguma parte da url e são usados no path, user info, query string e fragment, não precisamos encodar esses caracteres
