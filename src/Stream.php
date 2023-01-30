@@ -11,11 +11,43 @@ use Throwable;
 
 class Stream implements StreamInterface
 {
+    /**
+     * Rsource da stream, tipicamente pego por fopen().
+     *
+     * @var resource|null
+     */
     private $stream;
+
+    /**
+     * Tamanho da stream;.
+     *
+     * @var int|null
+     */
     private ?int $size;
+
+    /**
+     * Se o ponteiro é manipulável.
+     *
+     * @var bool
+     */
     private bool $seekable;
+    /**
+     * Se é possível escrever.
+     *
+     * @var bool
+     */
     private bool $writable;
+    /**
+     * Se é possível ler.
+     *
+     * @var bool
+     */
     private bool $readable;
+    /**
+     * Apenas um wraper para as funçãos nativas do php que manipulam arquivos como fopen() fclose().
+     *
+     * @var FWraperInterface
+     */
     private FWraperInterface $fwraper;
 
     public function __construct($body = '', $wraper = new FWraper())
@@ -44,6 +76,12 @@ class Stream implements StreamInterface
         $this->rewind();
     }
 
+    /**
+     * Retorna a metadata da stream.
+     *
+     * @param  string|null       $key
+     * @return array|string|null
+     */
     public function getMetadata($key = null) : array|string|null
     {
         if (!isset($this->stream)) {
@@ -59,6 +97,11 @@ class Stream implements StreamInterface
         return $meta[$key] ?? null;
     }
 
+    /**
+     * Retorna o conteúdo da stream.
+     *
+     * @return string
+     */
     public function getContents() : string
     {
         $this->hasStreamOrError();
@@ -66,6 +109,11 @@ class Stream implements StreamInterface
         return $this->fwraper->stream_get_contents($this->stream);
     }
 
+    /**
+     * Retorna o tamanho da stream.
+     *
+     * @return int|null
+     */
     public function getSize() : int|null
     {
         if (!isset($this->stream)) {
@@ -78,6 +126,12 @@ class Stream implements StreamInterface
         return $this->size;
     }
 
+    /**
+     * Lê determinada quantidade da stream.
+     *
+     * @param  int    $length
+     * @return string
+     */
     public function read($length) : string
     {
         $this->hasStreamOrError();
@@ -95,11 +149,22 @@ class Stream implements StreamInterface
         return $result;
     }
 
+    /**
+     * Retorna se é possível ler a stream.
+     *
+     * @return bool
+     */
     public function isReadable() : bool
     {
         return $this->readable;
     }
 
+    /**
+     * Escreve o dado na stream.
+     *
+     * @param  string $string
+     * @return int
+     */
     public function write($string) : int
     {
         $this->hasStreamOrError();
@@ -117,16 +182,33 @@ class Stream implements StreamInterface
         return $write;
     }
 
+    /**
+     * Retorna se é possível gravar na stream.
+     *
+     * @return bool
+     */
     public function isWritable()
     {
         return $this->writable;
     }
 
+    /**
+     * Seta o ponteiro da stream no 0.
+     *
+     * @return void
+     */
     public function rewind() : void
     {
         $this->seek(0);
     }
 
+    /**
+     * Coloca o ponteiro da stream em determinado local.
+     *
+     * @param  int  $offset
+     * @param  int  $whence
+     * @return void
+     */
     public function seek($offset, $whence = SEEK_SET) : void
     {
         $this->hasStreamOrError();
@@ -142,16 +224,31 @@ class Stream implements StreamInterface
         }
     }
 
+    /**
+     * Retorna se o ponteiro da stream é manipulável.
+     *
+     * @return bool
+     */
     public function isSeekable()
     {
         return $this->seekable;
     }
 
+    /**
+     * Retorna se já está no final da stream.
+     *
+     * @return bool
+     */
     public function eof() : bool
     {
         return !isset($this->stream) || $this->fwraper->feof($this->stream);
     }
 
+    /**
+     * Retorna a posição atual do ponteiro da stream.
+     *
+     * @return int
+     */
     public function tell() : int
     {
         $this->hasStreamOrError();
@@ -165,6 +262,11 @@ class Stream implements StreamInterface
         return $position;
     }
 
+    /**
+     * Remove o resource da stream e o retorna.
+     *
+     * @return mixed
+     */
     public function detach() : mixed
     {
         if (!isset($this->stream)) {
@@ -179,6 +281,11 @@ class Stream implements StreamInterface
         return $resource;
     }
 
+    /**
+     * Fecha a conexão com o resource da stream e o remove.
+     *
+     * @return void
+     */
     public function close() : void
     {
         if (is_resource($this->stream)) {
@@ -187,11 +294,21 @@ class Stream implements StreamInterface
         $this->detach();
     }
 
+    /**
+     * Retorna se existe um resource na stream.
+     *
+     * @return bool
+     */
     public function hasStream() : bool
     {
         return isset($this->stream);
     }
 
+    /**
+     * Retorna todo o conteúdo da stream.
+     *
+     * @return string
+     */
     public function __toString() : string
     {
         try {
@@ -206,6 +323,11 @@ class Stream implements StreamInterface
     }
 
     // private
+    /**
+     * Caso não tenha nada na stream estora um erro.
+     *
+     * @return void
+     */
     private function hasStreamOrError() : void
     {
         if (!isset($this->stream)) {
