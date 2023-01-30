@@ -9,15 +9,42 @@ trait RequestTrait
 {
     use MessageTrait;
 
+    /**
+     * Método http.
+     *
+     * @var string|null
+     */
     private $method;
+    /**
+     * Objetivo da request.
+     *
+     * @var mixed
+     */
     private $requestTarget;
+
+    /**
+     * Uri da request.
+     *
+     * @var [type]
+     */
     private $uri;
 
+    /**
+     * Basicamente a url solicitada.
+     *
+     * @return void
+     */
     public function getRequestTarget()
     {
         return $this->requestTarget;
     }
 
+    /**
+     * Retorna uma nova instância com o request-target passado.
+     *
+     * @param  mixed $requestTarget
+     * @return void
+     */
     public function withRequestTarget($requestTarget)
     {
         if (preg_match('/\s/', $requestTarget)) {
@@ -30,11 +57,22 @@ trait RequestTrait
         return $clone;
     }
 
+    /**
+     * Retorna o método http da request.
+     *
+     * @return void
+     */
     public function getMethod()
     {
         return $this->method;
     }
 
+    /**
+     * Retorna uma nova instância com o método http passado.
+     *
+     * @param  string $method
+     * @return void
+     */
     public function withMethod($method)
     {
         if (!is_string($method)) {
@@ -49,11 +87,23 @@ trait RequestTrait
         return $clone;
     }
 
+    /**
+     * Retorna a uri da request.
+     *
+     * @return void
+     */
     public function getUri()
     {
         return $this->uri;
     }
 
+    /**
+     * Retorna uma nova instância com a uri passada.
+     *
+     * @param  PsrUriInterface $uri
+     * @param  bool            $preserveHost
+     * @return void
+     */
     public function withUri(PsrUriInterface $uri, $preserveHost = false)
     {
         $clone      = clone $this;
@@ -84,6 +134,12 @@ trait RequestTrait
     }
 
     // tchar = "!" / "#" / "$" / "%" / "&" / "'" / "*" / "+" / "-" / "." / "^" / "_" / "`" / "|" / "~" / DIGIT / ALPHA
+    /**
+     * Valida o método http.
+     *
+     * @param  string $method
+     * @return void
+     */
     private function validateMethod(string $method)
     {
         if (!preg_match('/^[\!\#\$\%\&\'\*\+\-\.\^\_\`\|\~a-zA-Z0-9]+$/', $method)) {
