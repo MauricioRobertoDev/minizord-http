@@ -80,12 +80,12 @@ trait MessageTrait
             throw new InvalidArgumentException('Argumento 2 deve ser uma string ou um array de strings');
         }
 
-        $name  = $this->filterHeaderName($name);
-        $value = $this->filterHeaderValue($value);
+        $name   = $this->filterHeaderName($name);
+        $values = $this->filterHeaderValue($value);
 
         $clone                                 = clone $this;
         $clone->headerNames[strtolower($name)] = $name;
-        $clone->headers[$name]                 = array_merge($this->getHeader($name), $value);
+        $clone->headers[$name]                 = [...$this->getHeader($name), ...$values];
 
         return $clone;
     }
@@ -98,12 +98,21 @@ trait MessageTrait
         return $clone;
     }
 
-    public function getBody()
+    public function getBody() : PsrStreamInterface
     {
+        if (!isset($this->stream)) {
+            $this->stream = new Stream('');
+        }
+
+        return $this->stream;
     }
 
-    public function withBody(PsrStreamInterface $body)
+    public function withBody(PsrStreamInterface $body) : self
     {
+        $clone         = clone $this;
+        $clone->stream = $body;
+
+        return $clone;
     }
 
     // private
