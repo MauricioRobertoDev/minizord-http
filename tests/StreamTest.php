@@ -73,7 +73,7 @@ test('Deve ler o conteúdo da stream', function () {
     $stream->seek(7);
     expect($stream->read(13))->toBe('tomate alface');
 
-    $stream = new Stream(fopen('for-tests.txt', 'w'));
+    $stream = new Stream(fopen('./tests/for-test.txt', 'w'));
     expect(fn () => $stream->read(13))->toThrow(RuntimeException::class);
 
     $mock = mock(new FWraper())
@@ -82,7 +82,7 @@ test('Deve ler o conteúdo da stream', function () {
         ->andReturn(false)
         ->getMock();
 
-    $stream = new Stream(fopen('for-tests.txt', 'w+'), $mock);
+    $stream = new Stream(fopen('./tests/for-test.txt', 'w+'), $mock);
 
     expect(fn () => $stream->read(13))->toThrow(RuntimeException::class);
 });
@@ -91,10 +91,10 @@ test('Deve retornar se é legível ou não', function () {
     $stream = new Stream('batata tomate alface');
     expect($stream->isReadable())->toBeTrue();
 
-    $stream = new Stream(fopen('for-test.txt', 'w'));
+    $stream = new Stream(fopen('./tests/for-test.txt', 'w'));
     expect($stream->isReadable())->toBeFalse();
 
-    $stream = new Stream(fopen('for-test.txt', 'r'));
+    $stream = new Stream(fopen('./tests/for-test.txt', 'r'));
     expect($stream->isReadable())->toBeTrue();
 });
 
@@ -109,12 +109,12 @@ test('Deve escrever no conteúdo da stream', function () {
     $stream->rewind();
     expect($stream->getContents())->toBe('alface tomate');
 
-    $stream = new Stream(fopen('for-test.txt', 'r'));
+    $stream = new Stream(fopen('./tests/for-test.txt', 'r'));
     expect($stream->isWritable())->toBeFalse();
     expect(fn () => $stream->write('alface'))->toThrow(RuntimeException::class);
 
     $mock   = mock(new FWraper())->shouldReceive('fwrite')->once()->andReturn(false)->getMock();
-    $stream = new Stream(fopen('for-tests.txt', 'r+'), $mock);
+    $stream = new Stream(fopen('./tests/for-test.txt', 'r+'), $mock);
 
     expect($stream->isWritable())->toBeTrue();
     expect(fn () => $stream->write('alface'))->toThrow(RuntimeException::class);
@@ -124,10 +124,10 @@ test('Deve retornar se é gravável ou não', function () {
     $stream = new Stream('batata tomate alface');
     expect($stream->isWritable())->toBeTrue();
 
-    $stream = new Stream(fopen('for-test.txt', 'w'));
+    $stream = new Stream(fopen('./tests/for-test.txt', 'w'));
     expect($stream->isWritable())->toBeTrue();
 
-    $stream = new Stream(fopen('for-test.txt', 'r'));
+    $stream = new Stream(fopen('./tests/for-test.txt', 'r'));
     expect($stream->isWritable())->toBeFalse();
 });
 
