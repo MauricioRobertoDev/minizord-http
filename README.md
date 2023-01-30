@@ -172,3 +172,4 @@ Porem com pesquisa o que entendi é ser proposital, há várias RFC que ainda n�
  - [Mozilla - Visão geral do HTTP](https://developer.mozilla.org/pt-BR/docs/Web/HTTP/Overview)
  - [Mozilla - Evolução do HTTP](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Evolution_of_HTTP)
  - [Mozilla - Cabeçalhos HTTP](https://developer.mozilla.org/pt-BR/docs/Web/HTTP/Headers)
+ - [IANA - Lista de Códigos HTTP](http://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml)
