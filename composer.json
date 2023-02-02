@@ -9,8 +9,9 @@
     "license": "MIT",
     "scripts":{
         "test": "clear && vendor/bin/pest",
-        "test:coverage": "vendor/bin/pest --coverage",
-        "style:fix": "vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php --allow-risky=yes"
+        "test:coverage": "clear && vendor/bin/pest --coverage",
+        "style:fix": "vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php --allow-risky=yes",
+        "insights" : "clear && ./vendor/bin/phpinsights"
     },
     "autoload": {
         "psr-4": {
@@ -38,11 +39,13 @@
     "require-dev": {
         "pestphp/pest": "^1.22",
         "friendsofphp/php-cs-fixer": "^3.13",
-        "pestphp/pest-plugin-mock": "^1.0"
+        "pestphp/pest-plugin-mock": "^1.0",
+        "nunomaduro/phpinsights": "^2.7"
     },
     "config": {
         "allow-plugins": {
-            "pestphp/pest-plugin": true
+            "pestphp/pest-plugin": true,
+            "dealerdirect/phpcodesniffer-composer-installer": true
         }
     }
 }
