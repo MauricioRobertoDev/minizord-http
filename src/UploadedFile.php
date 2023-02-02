@@ -20,14 +20,64 @@ class UploadedFile implements UploadedFileInterface
         UPLOAD_ERR_EXTENSION  => 'Uma extensão PHP interrompeu o upload do arquivo.',
     ];
 
+    /**
+     * Tamanho do arquivo.
+     *
+     * @var int
+     */
     private int $size;
+
+    /**
+     * Código de erro.
+     *
+     * @var int
+     */
     private int $error;
+
+    /**
+     * Se foi movido ou não.
+     *
+     * @var bool
+     */
     private bool $moved                 = false;
+
+    /**
+     * Filename do arquivo.
+     *
+     * @var string|null
+     */
     private ?string $file               = null;
+
+    /**
+     * Nome do arquivo.
+     *
+     * @var string|null
+     */
     private ?string $clientFilename     = null;
+
+    /**
+     * Tipo do arquivo.
+     *
+     * @var string|null
+     */
     private ?string $clientMediaType    = null;
+
+    /**
+     * Stream do arquivo.
+     *
+     * @var PsrStreamInterface|null
+     */
     private ?PsrStreamInterface $stream = null;
 
+    /**
+     * Representa um arquivo carregado por meio de uma solicitação HTTP.
+     *
+     * @param PsrStreamInterface|resource|string $streamOrFile
+     * @param int                                $size
+     * @param int                                $error
+     * @param string|null                        $clientFilename
+     * @param string|null                        $clientMediaType
+     */
     public function __construct(
         $streamOrFile,
         int $size,
@@ -69,7 +119,12 @@ class UploadedFile implements UploadedFileInterface
         throw new InvalidArgumentException('Stream ou arquivo inválido');
     }
 
-    public function getStream()
+    /**
+     * Retorna um stream que representa o arquivo carregado.
+     *
+     * @return PsrStreamInterface
+     */
+    public function getStream() : PsrStreamInterface
     {
         $this->hasMovedThrowException();
 
@@ -92,7 +147,13 @@ class UploadedFile implements UploadedFileInterface
         return $this->stream;
     }
 
-    public function moveTo($targetPath)
+    /**
+     * Mova o arquivo carregado para um novo local.
+     *
+     * @param  string $targetPath
+     * @return void
+     */
+    public function moveTo($targetPath) : void
     {
         $this->hasMovedThrowException();
 
@@ -137,36 +198,71 @@ class UploadedFile implements UploadedFileInterface
         $this->moved = true;
     }
 
+    /**
+     * Retorna o tamanho do arquivo.
+     *
+     * @return int
+     */
     public function getSize() : int
     {
         return $this->size;
     }
 
+    /**
+     * Retorna o erro associado ao arquivo carregado.
+     *
+     * @return int
+     */
     public function getError() : int
     {
         return $this->error;
     }
 
+    /**
+     * Retorna a mensagem do erro ssociado ao arquivo carregado.
+     *
+     * @return string
+     */
     public function getErrorMessage() : string
     {
         return self::ERRORS[$this->error] ?? '';
     }
 
+    /**
+     * Retorna o nome do arquivo enviado pelo cliente.
+     *
+     * @return string|null
+     */
     public function getClientFilename() : ?string
     {
         return $this->clientFilename;
     }
 
+    /**
+     * Retorna o tipo de mídia enviado pelo cliente.
+     *
+     * @return string|null
+     */
     public function getClientMediaType() : ?string
     {
         return $this->clientMediaType;
     }
 
+    /**
+     * Retorna se o arquivo carregado já foi movido.
+     *
+     * @return bool
+     */
     public function hasBeenMoved() : bool
     {
         return $this->moved;
     }
 
+    /**
+     * Estoura um erro caso o arquivo já tenha sido movido.
+     *
+     * @return void
+     */
     private function hasMovedThrowException() : void
     {
         if ($this->moved) {
