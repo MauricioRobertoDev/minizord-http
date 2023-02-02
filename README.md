@@ -168,8 +168,9 @@ Porem com pesquisa o que entendi é ser proposital, há várias RFC que ainda n�
 <!-- References -->
 ## :microscope: Referências
  - [Regex101 - Testar regex](https://regex101.com/)
- - [Pinoy Code Streamer - implementação básica](https://www.youtube.com/watch?v=6VAAyuVsDco)
+ - [Pinoy Code Streamer - Implementação básica](https://www.youtube.com/watch?v=6VAAyuVsDco)
  - [Mozilla - Visão geral do HTTP](https://developer.mozilla.org/pt-BR/docs/Web/HTTP/Overview)
  - [Mozilla - Evolução do HTTP](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Evolution_of_HTTP)
  - [Mozilla - Cabeçalhos HTTP](https://developer.mozilla.org/pt-BR/docs/Web/HTTP/Headers)
- - [IANA - Lista de Códigos HTTP](http://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml)
+ - [IANA - Lista de códigos HTTP](http://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml)
+ - [PHP - Lista de erros ao upar um arquivo](https://www.php.net/manual/en/features.file-upload.errors.php)
