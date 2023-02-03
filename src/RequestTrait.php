@@ -3,6 +3,7 @@
 namespace Minizord\Http;
 
 use InvalidArgumentException;
+use Psr\Http\Message\RequestInterface as PsrRequestInterface;
 use Psr\Http\Message\UriInterface as PsrUriInterface;
 
 trait RequestTrait
@@ -54,8 +55,8 @@ trait RequestTrait
     /**
      * Retorna uma nova instância com o request-target passado.
      *
-     * @param  mixed $requestTarget
-     * @return void
+     * @param  mixed               $requestTarget
+     * @return PsrRequestInterface
      */
     public function withRequestTarget($requestTarget) : self
     {
@@ -82,8 +83,8 @@ trait RequestTrait
     /**
      * Retorna uma nova instância com o método http passado.
      *
-     * @param  string $method
-     * @return void
+     * @param  string              $method
+     * @return PsrRequestInterface
      */
     public function withMethod($method) : self
     {
@@ -112,9 +113,9 @@ trait RequestTrait
     /**
      * Retorna uma nova instância com a uri passada.
      *
-     * @param  PsrUriInterface $uri
-     * @param  bool            $preserveHost
-     * @return self
+     * @param  PsrUriInterface     $uri
+     * @param  bool                $preserveHost
+     * @return PsrRequestInterface
      */
     public function withUri(PsrUriInterface $uri, $preserveHost = false) : self
     {
