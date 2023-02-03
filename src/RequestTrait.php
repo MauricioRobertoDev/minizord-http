@@ -12,31 +12,43 @@ trait RequestTrait
     /**
      * Método http.
      *
+     * @var string
+     */
+    private string $method = 'GET';
+
+    /**
+     * Destino da solicitação.
+     *
      * @var string|null
      */
-    private $method;
-    /**
-     * Objetivo da request.
-     *
-     * @var mixed
-     */
-    private $requestTarget;
+    private ?string $requestTarget = null;
 
     /**
      * Uri da request.
      *
-     * @var [type]
+     * @var PsrUriInterface
      */
-    private $uri;
+    private PsrUriInterface $uri;
 
     /**
-     * Basicamente a url solicitada.
+     * Retorna o destino da solicitação.
      *
-     * @return void
+     * @return string
      */
-    public function getRequestTarget()
+    public function getRequestTarget() : string
     {
-        return $this->requestTarget;
+        if ($this->requestTarget !== null) {
+            return $this->requestTarget;
+        }
+
+        $target = $this->uri->getPath();
+        $query  = $this->uri->getQuery();
+
+        if ($target && $query) {
+            $target .= '?' . $query;
+        }
+
+        return $target ? $target : '/';
     }
 
     /**
@@ -45,9 +57,9 @@ trait RequestTrait
      * @param  mixed $requestTarget
      * @return void
      */
-    public function withRequestTarget($requestTarget)
+    public function withRequestTarget($requestTarget) : self
     {
-        if (preg_match('/\s/', $requestTarget)) {
+        if (!is_string($requestTarget) || preg_match('/\s/', $requestTarget)) {
             throw new InvalidArgumentException('Request target não deve conter espaços');
         }
 
@@ -62,7 +74,7 @@ trait RequestTrait
      *
      * @return void
      */
-    public function getMethod()
+    public function getMethod() : string
     {
         return $this->method;
     }
@@ -73,7 +85,7 @@ trait RequestTrait
      * @param  string $method
      * @return void
      */
-    public function withMethod($method)
+    public function withMethod($method) : self
     {
         if (!is_string($method)) {
             throw new InvalidArgumentException('O método deve ser uma string');
@@ -90,9 +102,9 @@ trait RequestTrait
     /**
      * Retorna a uri da request.
      *
-     * @return void
+     * @return PsrUriInterface
      */
-    public function getUri()
+    public function getUri() : PsrUriInterface
     {
         return $this->uri;
     }
@@ -102,14 +114,14 @@ trait RequestTrait
      *
      * @param  PsrUriInterface $uri
      * @param  bool            $preserveHost
-     * @return void
+     * @return self
      */
-    public function withUri(PsrUriInterface $uri, $preserveHost = false)
+    public function withUri(PsrUriInterface $uri, $preserveHost = false) : self
     {
         $clone      = clone $this;
         $clone->uri = $uri;
 
-        // mandou preservar o hosto e nós de fato temos o host para preservar.
+        // mandou preservar o host e nós de fato temos o host para preservar.
         if ($preserveHost && $this->hasHeader('Host')) {
             return $clone;
         }
@@ -126,9 +138,10 @@ trait RequestTrait
      * @param  string $method
      * @return void
      */
-    private function validateMethod(string $method)
+    private function validateMethod(string $method) : void
     {
         if (!preg_match('/^[\!\#\$\%\&\'\*\+\-\.\^\_\`\|\~a-zA-Z0-9]+$/', $method)) {
+            // TODO: acho que não faz mal criar um array com os métodos mais usados e checar se está dentro
             throw new InvalidArgumentException('O método deve ser uma string');
         }
     }
@@ -142,13 +155,11 @@ trait RequestTrait
 
         // nós não temos o host mas a uri tem, nós adicionamos a porta
         $host = $this->uri->getHost();
+
         if ($this->uri->getPort()) {
             $host .= ':' . $this->uri->getPort();
         }
 
-        // removemos o header host do clone e adicionamos o que pegamos da uri
-        unset($this->headers['Host']);
-        $this->headerNames['host'] = 'Host';
-        $this->headers['Host']     = [$host];
+        $this->setHeaders(['Host' => $host]);
     }
 }
