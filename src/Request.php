@@ -13,23 +13,26 @@ class Request implements RequestInterface
     /**
      * Representação de uma solicitação de saída do lado do cliente.
      *
-     * @param string                 $method
-     * @param PsrUriInterface|string $uri
-     * @param array                  $headers
-     * @param PsrStream|string       $body
-     * @param string                 $version
+     * @param string                    $method
+     * @param PsrUriInterface|string    $uri
+     * @param array                     $headers
+     * @param PsrStreamInterface|string $body
+     * @param string                    $version
      */
     public function __construct(string $method, $uri, array $headers = [], $body = null, string $version = '1.1')
     {
+        $this->validateMethod($method);
+        $this->validateProtocolVersion($version);
+
         if (!($uri instanceof PsrPsrUriInterface)) {
             $uri = new Uri($uri);
         }
 
-        $this->method = $method;
-        $this->uri    = $uri;
-        $this->setHeaders($headers);
-        $this->validateProtocolVersion($version);
+        $this->method   = $method;
+        $this->uri      = $uri;
         $this->protocol = $version;
+
+        $this->setHeaders($headers);
 
         if (!$this->hasHeader('Host')) {
             $this->setHostFromUri();
