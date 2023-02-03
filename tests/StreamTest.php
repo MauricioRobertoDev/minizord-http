@@ -1,23 +1,66 @@
 <?php
 
-use Minizord\Http\Helper\FWraper;
 use Minizord\Http\Stream;
 use Psr\Http\Message\StreamInterface as PsrStreamInterface;
 
-test('Deve instânciar uma classe stream', function () {
+/*
+ * Instâncialização
+ */
+test('Deve instânciar uma classe stream passando nada', function () {
     $stream = new Stream();
+
     expect($stream)->toBeInstanceOf(PsrStreamInterface::class);
-
-    $stream = new Stream('batata');
-    expect($stream)->toBeInstanceOf(PsrStreamInterface::class);
-
-    expect(fn () => new Stream(888))->toThrow(InvalidArgumentException::class);
-    expect(fn () => new Stream(null))->toThrow(InvalidArgumentException::class);
-
-    $mock = mock(new FWraper())->shouldReceive('stream_get_meta_data')->andReturn(['seekable' => false, 'mode'     => 'w+b'])->getMock();
-    expect(fn () => new Stream('batata', $mock))->toThrow(RuntimeException::class);
+    expect($stream->hasStream())->toBeTrue();
+    expect($stream->getSize())->toBe(0);
+    expect($stream->isReadable())->toBeTrue();
+    expect($stream->isWritable())->toBeTrue();
+    expect($stream->isSeekable())->toBeTrue();
+    expect($stream->getContents())->toBe('');
+    expect($stream->getMetadata('wrapper_type'))->toBe('PHP');
+    expect($stream->getMetadata('stream_type'))->toBe('TEMP');
+    expect($stream->getMetadata('uri'))->toBe('php://temp');
 });
 
+test('Deve instânciar uma classe stream passando uma string de dados', function () {
+    $stream = new Stream('batata');
+
+    expect($stream)->toBeInstanceOf(PsrStreamInterface::class);
+    expect($stream->hasStream())->toBeTrue();
+    expect($stream->getSize())->toBe(6);
+    expect($stream->isReadable())->toBeTrue();
+    expect($stream->isWritable())->toBeTrue();
+    expect($stream->isSeekable())->toBeTrue();
+    expect($stream->getMetadata('wrapper_type'))->toBe('PHP');
+    expect($stream->getMetadata('stream_type'))->toBe('TEMP');
+    expect($stream->getMetadata('uri'))->toBe('php://temp');
+    expect((string) $stream)->toBe('batata');
+});
+
+test('Deve instânciar uma classe stream passando um resource', function () {
+    $tempFileName     = tempnam(sys_get_temp_dir(), 'for-test');
+    $resource         = fopen($tempFileName, 'rw+');
+    $stream           = new Stream($resource);
+
+    expect($stream)->toBeInstanceOf(PsrStreamInterface::class);
+    expect($stream->hasStream())->toBeTrue();
+    expect($stream->getSize())->toBe(0);
+    expect($stream->isReadable())->toBeTrue();
+    expect($stream->isWritable())->toBeTrue();
+    expect($stream->isSeekable())->toBeTrue();
+    expect($stream->getMetadata('wrapper_type'))->toBe('plainfile');
+    expect($stream->getMetadata('stream_type'))->toBe('STDIO');
+    expect($stream->getMetadata('uri'))->toBe($tempFileName);
+    expect((string) $stream)->toBe('');
+});
+
+test('Deve estourar um erro caso passe um argumento inválido', function () {
+    expect(fn () => new Stream(888))->toThrow(InvalidArgumentException::class);
+    expect(fn () => new Stream(null))->toThrow(InvalidArgumentException::class);
+});
+
+/*
+ * getMetadata()
+ */
 test('Deve retornar a (metadata) da stream', function () {
     $stream = new Stream('batata');
 
@@ -31,40 +74,72 @@ test('Deve retornar a (metadata) da stream', function () {
     ]);
     expect($stream->getMetadata('wrapper_type'))->toBe('PHP');
     expect($stream->getMetadata('mode'))->toBe('w+b');
-    $stream->close();
-    expect($stream->getMetadata('mode'))->toBe(null);
 });
 
-test('Deve retornar a (content) da stream', function () {
+test('Deve retornar um array vazio caso não tenha um resource', function () {
     $stream = new Stream('batata');
-    expect($stream->getContents())->toBe('batata');
-
-    $stream->write(' tomate');
-    $stream->rewind();
-    expect($stream->getContents())->toBe('batata tomate');
-
     $stream->close();
+
+    expect($stream->getMetadata())->toBe([]);
+});
+
+/*
+ * getContents()
+ */
+test('Deve retornar uma string com o restante dos dados', function () {
+    $stream = new Stream('batata tomate alface');
+
+    expect($stream->getContents())->toBe('batata tomate alface');
+
+    $stream->rewind();
+    $stream->read(7);
+
+    expect($stream->getContents())->toBe('tomate alface');
+
+    $stream->rewind();
+    $stream->read(14);
+
+    expect($stream->getContents())->toBe('alface');
+
+    $stream->rewind();
+    $stream->read(20);
+
+    expect($stream->getContents())->toBe('');
+});
+
+test('Deve estourar um erro tente pegar o conteúdo de uma stream que não tenha um resource', function () {
+    $stream = new Stream('batata tomate alface');
+    $stream->close();
+
     expect(fn () => $stream->getContents())->toThrow(RuntimeException::class);
 });
 
-test('Deve retornar o (size) da stream', function () {
+/*
+ * getSize()
+ */
+test('Deve retornar o tamanho do resource na stream', function () {
+    $stream = new Stream('batata');
+
+    expect($stream->getSize())->toBe(6);
+});
+
+test('Deve retornar o tamanho como null caso não tenha resource na stream', function () {
     $stream = new Stream('batata');
 
     expect($stream->getSize())->toBe(6);
 
-    $stream->read(6);
-    $stream->write(' tomate');
-    $stream->rewind();
-
-    expect($stream->getContents())->toBe('batata tomate');
-    expect($stream->getSize())->toBe(13);
-
     $stream->close();
-    expect($stream->getSize())->toBe(null);
+
+    expect($stream->getSize())->toBeNull();
 });
 
-test('Deve ler o conteúdo da stream', function () {
+/*
+ * read()
+ */
+test('Deve ler o conteúdo do resource na stream', function () {
     $stream = new Stream('batata tomate alface');
+
+    expect($stream->isReadable())->toBeTrue();
     expect($stream->read(7))->toBe('batata ');
 
     $stream->rewind();
@@ -72,152 +147,160 @@ test('Deve ler o conteúdo da stream', function () {
 
     $stream->seek(7);
     expect($stream->read(13))->toBe('tomate alface');
-
-    $stream = new Stream(fopen('./tests/for-test.txt', 'w'));
-    expect(fn () => $stream->read(13))->toThrow(RuntimeException::class);
-
-    $mock = mock(new FWraper())
-        ->shouldReceive('fread')
-        ->once()
-        ->andReturn(false)
-        ->getMock();
-
-    $stream = new Stream(fopen('./tests/for-test.txt', 'w+'), $mock);
-
-    expect(fn () => $stream->read(13))->toThrow(RuntimeException::class);
 });
 
-test('Deve retornar se é legível ou não', function () {
-    $stream = new Stream('batata tomate alface');
-    expect($stream->isReadable())->toBeTrue();
+test('Deve estourar um erro caso o resource na stream não seja legível', function () {
+    $tempFileName     = tempnam(sys_get_temp_dir(), 'for-test');
+    $resource         = fopen($tempFileName, 'w');
+    fwrite($resource, 'batata');
+    $stream           = new Stream($resource);
 
-    $stream = new Stream(fopen('./tests/for-test.txt', 'w'));
     expect($stream->isReadable())->toBeFalse();
+    expect(fn () => $stream->read(13))->toThrow(RuntimeException::class);
+});
 
-    $stream = new Stream(fopen('./tests/for-test.txt', 'r'));
+/*
+ * write()
+ */
+test('Deve escrever o conteúdo no resource da stream', function () {
+    $stream = new Stream();
+
+    expect($stream->isWritable())->toBeTrue();
     expect($stream->isReadable())->toBeTrue();
-});
 
-test('Deve escrever no conteúdo da stream', function () {
-    $stream = new Stream('batata');
-    expect($stream->getContents())->toBe('batata');
+    $stream->write('batata');
+
+    expect((string) $stream)->toBe('batata');
+
+    $stream->seek(6);
     $stream->write(' tomate');
-    $stream->rewind();
-    expect($stream->getContents())->toBe('batata tomate');
-    $stream->rewind();
-    $stream->write('alface');
-    $stream->rewind();
-    expect($stream->getContents())->toBe('alface tomate');
 
-    $stream = new Stream(fopen('./tests/for-test.txt', 'r'));
-    expect($stream->isWritable())->toBeFalse();
-    expect(fn () => $stream->write('alface'))->toThrow(RuntimeException::class);
-
-    $mock   = mock(new FWraper())->shouldReceive('fwrite')->once()->andReturn(false)->getMock();
-    $stream = new Stream(fopen('./tests/for-test.txt', 'r+'), $mock);
-
-    expect($stream->isWritable())->toBeTrue();
-    expect(fn () => $stream->write('alface'))->toThrow(RuntimeException::class);
-});
-
-test('Deve retornar se é gravável ou não', function () {
-    $stream = new Stream('batata tomate alface');
-    expect($stream->isWritable())->toBeTrue();
-
-    $stream = new Stream(fopen('./tests/for-test.txt', 'w'));
-    expect($stream->isWritable())->toBeTrue();
-
-    $stream = new Stream(fopen('./tests/for-test.txt', 'r'));
-    expect($stream->isWritable())->toBeFalse();
-});
-
-test('Deve setar o ponteiro da stream em 0', function () {
-    $stream = new Stream('batata tomate alface');
-    expect($stream->read(6))->toBe('batata');
-    expect($stream->read(6))->toBe(' tomat');
-    $stream->rewind();
-    expect($stream->read(6))->toBe('batata');
-});
-
-test('Deve setar o ponteiro da stream no lugar desejado', function () {
-    $stream = new Stream('batata tomate alface');
-
-    $stream->seek(7);
-    expect($stream->read(6))->toBe('tomate');
+    expect((string) $stream)->toBe('batata tomate');
 
     $stream->seek(0);
-    expect($stream->read(6))->toBe('batata');
+    $stream->write('alface');
 
-    $stream->seek(14);
-    expect($stream->read(6))->toBe('alface');
-
-    $mock   = mock(new FWraper())->shouldReceive('fseek')->andReturn(-1)->getMock();
-    expect(fn () =>  new Stream('batata tomate alface', $mock))->toThrow(RuntimeException::class);
+    expect((string) $stream)->toBe('alface tomate');
 });
 
-test('Deve retornar se é possível manipular o ponteiro ou não', function () {
+test('Deve estourar um errocaso o resource na stream não seja gravável', function () {
+    $tempFileName     = tempnam(sys_get_temp_dir(), 'for-test');
+    $resource         = fopen($tempFileName, 'r');
+    $stream           = new Stream($resource);
+
+    expect($stream->isWritable())->toBeFalse();
+    expect(fn () => $stream->write('batata'))->toThrow(RuntimeException::class);
+});
+
+/*
+ * seek()
+ */
+test('Deve manipular o ponteiro do resource', function () {
     $stream = new Stream('batata tomate alface');
 
-    expect($stream->isSeekable())->toBeTrue();
+    $stream->seek(0);
+
+    expect($stream->tell())->toBe(0);
+
+    $stream->seek(7);
+
+    expect($stream->tell())->toBe(7);
 });
 
-test('Deve retornar se está no fim da stream ou não', function () {
-    $stream = new Stream('batata tomate alface'); // 20
+test('Deve estourar um erro ao tentar manipular o ponteiro sem ter um resource na stream', function () {
+    $stream = new Stream('batata tomate alface');
+
+    $stream->seek(0);
+
+    expect($stream->tell())->toBe(0);
+
+    $stream->close();
+
+    expect(fn () => $stream->seek(0))->toThrow(RuntimeException::class);
+});
+
+/*
+ * eof()
+ */
+test('Deve retornar true caso não tenha nenhum resource na stream', function () {
+    $stream = new Stream('batata');
+
     expect($stream->eof())->toBeFalse();
 
-    $stream->read(6);
+    $stream->read(1024);
+
+    expect($stream->eof())->toBeTrue();
+
+    $stream->rewind();
+
     expect($stream->eof())->toBeFalse();
 
-    $stream->read(14);
-    expect($stream->eof())->toBeFalse();
+    $stream->close();
 
-    $stream->read(15);
     expect($stream->eof())->toBeTrue();
 });
 
-test('Deve retornar a posição do ponteiro', function () {
-    $stream = new Stream('batata tomate alface'); // 20
+/*
+ * tell()
+ */
+test('Deve retornar a posição atual do ponteiro no resource da stream', function () {
+    $stream = new Stream('batata tomate alface'); //20
+
     expect($stream->tell())->toBe(0);
 
-    $stream->seek(6);
+    $stream->read(6);
+
     expect($stream->tell())->toBe(6);
 
-    $stream->seek(14);
-    expect($stream->tell())->toBe(14);
+    $stream->read(6);
 
-    $stream->seek(15);
-    expect($stream->tell())->toBe(15);
+    expect($stream->tell())->toBe(12);
 
-    $mock   = mock(new FWraper())->shouldReceive('ftell')->andReturn(false)->getMock();
-    $stream = new Stream('batata', $mock);
-    expect(fn () =>  $stream->tell())->toThrow(RuntimeException::class);
+    $stream->read(6);
+
+    expect($stream->tell())->toBe(18);
+
+    $stream->read(6);
+
+    expect($stream->tell())->toBe(20);
 });
 
-test('Deve retornar a stream da classe e remover ela da classe', function () {
+test('Deve estourar um erro ao tentar buscar a posição atual do ponteiro sem um resource na stream', function () {
+    $stream = new Stream('batata tomate alface');
+    $stream->read(6);
+
+    expect($stream->tell())->toBe(6);
+
+    $stream->close();
+
+    expect(fn () => $stream->tell())->toThrow(RuntimeException::class);
+});
+
+/*
+ * detach()
+ */
+test('Deve remover o resource  da stream e retorna-lo', function () {
     $stream = new Stream('batata tomate alface');
 
-    expect($stream->hasStream())->toBeTrue();
-    expect(is_resource($stream->detach()))->toBeTrue();
+    expect(stream_get_contents($stream->detach()))->toBe('batata tomate alface');
+    expect($stream->hasStream())->toBeFalse();
+});
+
+test('Deve retornar null caso não exista nenhum resource na stream', function () {
+    $stream = new Stream('batata tomate alface');
+
+    $stream->detach();
+
     expect($stream->hasStream())->toBeFalse();
     expect($stream->detach())->toBeNull();
 });
 
-test('Deve remover a strema da classe', function () {
+/*
+ * close()
+ */
+test('Deve fechar o resource e remover da stream', function () {
     $stream = new Stream('batata tomate alface');
-
-    expect($stream->hasStream())->toBeTrue();
     $stream->close();
+
     expect($stream->hasStream())->toBeFalse();
-});
-
-test('Deve retornar todo o conteúdo que tem na stream', function () {
-    $stream = new Stream('batata tomate alface');
-
-    expect((string) $stream)->toBe('batata tomate alface');
-    $stream->seek(6);
-    expect((string) $stream)->toBe('batata tomate alface');
-
-    $mock   = mock(new FWraper())->shouldReceive('stream_get_contents')->once()->andThrow(new RuntimeException())->getMock();
-    $stream = new Stream('batata', $mock);
-    expect((string) $stream)->toBe('');
 });
