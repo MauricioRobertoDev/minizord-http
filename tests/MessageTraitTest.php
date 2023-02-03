@@ -69,6 +69,7 @@ test('Deve retornar uma nova instância com os valores dos headers substituidos'
     $message = $message->withHeader('any_name', ['any_value']);
 
     expect($message->withHeader('aNY_nAme', ['any_value_2'])->getHeader('any_name'))->toBe(['any_value_2']);
+    expect($message->withoutHeader('aNY_nAme')->getHeader('any_name'))->toBe([]);
 });
 
 /*
