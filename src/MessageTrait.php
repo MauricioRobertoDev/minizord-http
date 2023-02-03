@@ -13,18 +13,21 @@ trait MessageTrait
      * @var string
      */
     protected string $protocol   = '1.1';
+
     /**
      * Headers e seus valores.
      *
      * @var array
      */
     protected array $headers     = [];
+
     /**
      * Nome do header normalizado e o seu original.
      *
      * @var array
      */
     protected array $headerNames = [];
+
     /**
      * O corpo da requisição uma stream.
      *
@@ -145,7 +148,7 @@ trait MessageTrait
         }
 
         $clone   = clone $this;
-        $clone->setHeaders([$name => $value]);
+        $clone->setHeaders([$name => $value], true);
 
         return $clone;
     }
@@ -159,7 +162,7 @@ trait MessageTrait
     public function withoutHeader($name) : self
     {
         $clone = clone $this;
-        unset($clone->headers[$this->getOriginalHeaderName(($name))], $clone->headerNames[strtolower($name)]);
+        unset($clone->headers[$this->getOriginalHeaderName($name)], $clone->headerNames[strtolower($name)]);
 
         return $clone;
     }
@@ -190,6 +193,58 @@ trait MessageTrait
         $clone->body   = $body;
 
         return $clone;
+    }
+
+    /**
+     * Retorna o header tem todos os valores passados.
+     *
+     * @param  string       $name
+     * @param  string|array $values
+     * @return bool
+     */
+    public function inHeader(string $name, string|array $values) : bool
+    {
+        if (!$this->hasHeader($name)) {
+            return false;
+        }
+
+        if (is_string($values)) {
+            $values = [$values];
+        }
+
+        $headerValues = $this->getHeader($name);
+
+        foreach ($values as $value) {
+            if (!in_array($value, $headerValues)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Retorna de o header algum dos valores passados.
+     *
+     * @param  string $name
+     * @param  array  $values
+     * @return bool
+     */
+    public function inHeaderAny(string $name, array $values) : bool
+    {
+        if (!$this->hasHeader($name)) {
+            return false;
+        }
+
+        $headerValues = $this->getHeader($name);
+
+        foreach ($values as $value) {
+            if (in_array($value, $headerValues)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     // private
@@ -267,15 +322,18 @@ trait MessageTrait
      * @param  array $headers
      * @return void
      */
-    private function setHeaders(array $headers) : void
+    private function setHeaders(array $headers, bool $merge = false) : void
     {
         foreach ($headers as $header => $value) {
             $header     = $this->filterHeaderName($header);
             $value      = $this->filterHeaderValue($value);
 
-            if ($this->hasHeader($header)) {
+            if ($this->hasHeader($header) && $merge) {
                 $header                 = $this->getOriginalHeaderName($header);
                 $this->headers[$header] = [...$this->getHeader($header), ...$value];
+            } elseif ($this->hasHeader($header) && $merge === false) {
+                $header                 = $this->getOriginalHeaderName($header);
+                $this->headers[$header] = [...$value];
             } else {
                 $this->headerNames[strtolower($header)] = $header;
                 $this->headers[$header]                 = $value;
