@@ -5,15 +5,10 @@ namespace Minizord\Http;
 use InvalidArgumentException;
 use Minizord\Http\Contract\UriInterface;
 
-/**
- * Essa classe é um value object representando uma uri.
- */
 class Uri implements UriInterface
 {
-    //são são especificos de alguma parte da url e são usados no path, user info, query string e fragment, não precisamos encodar esses caracteres
     private const CHAR_UNRESERVED  = 'a-zA-Z0-9\-\.\_\~';
 
-    // são usados em user info, query string e fragment por isso não devemos encodar eles ao lidar com esses tipos
     private const CHAR_SUB_DELIMS  = '\!\$\&\'\(\)\*\+\,\;\=';
 
     private const SCHEMES = ['http' => 80, 'https' => 443];
@@ -37,21 +32,21 @@ class Uri implements UriInterface
      *
      * @var string
      */
-    private string $user;
+    private ?string $user = null;
 
     /**
      * Senha para autenticação.
      *
      * @var string|null
      */
-    private ?string $pass;
+    private ?string $pass = null;
 
     /**
      * Porta.
      *
      * @var string|null
      */
-    private ?string $port;
+    private ?string $port = null;
 
     /**
      * Query string, o que vem depois do ?
@@ -74,6 +69,11 @@ class Uri implements UriInterface
      */
     private string $path;
 
+    /**
+     * Representação de uma uri.
+     *
+     * @param string $url
+     */
     public function __construct(string $url)
     {
         $parts          = parse_url(urldecode($url));
@@ -120,7 +120,7 @@ class Uri implements UriInterface
             $userinfo .= ':' . $this->pass;
         }
 
-        return $userinfo;
+        return $userinfo ?? '';
     }
 
     /**
@@ -193,6 +193,10 @@ class Uri implements UriInterface
      */
     public function withScheme($scheme) : Uri
     {
+        if (!is_string($scheme)) {
+            throw new InvalidArgumentException('O scheme deve ser uma string');
+        }
+
         $scheme        = strtolower($scheme);
         $clone         = clone $this;
 
@@ -214,6 +218,14 @@ class Uri implements UriInterface
      */
     public function withUserInfo($user, $password = null) : Uri
     {
+        if (!is_string($user)) {
+            throw new InvalidArgumentException('O usuário deve ser uma string');
+        }
+
+        if ($password && !is_string($password)) {
+            throw new InvalidArgumentException('A senha deve ser uma string');
+        }
+
         $clone           = clone $this;
         $clone->user     = $user;
         $clone->pass     = $user ? $password : null;
