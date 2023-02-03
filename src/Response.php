@@ -101,8 +101,13 @@ class Response implements ResponseInterface
      * @param string      $version
      * @param string|null $reason
      */
-    public function __construct(int $status = 200, array $headers = [], $body = null, string $version = '1.1', string $reason = null)
-    {
+    public function __construct(
+        int $status = 200,
+        array $headers = [],
+        $body = null,
+        string $version = '1.1',
+        string $reason = null
+    ) {
         if ($body) {
             $this->body = new Stream($body);
         }
