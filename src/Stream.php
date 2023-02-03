@@ -3,27 +3,25 @@
 namespace Minizord\Http;
 
 use InvalidArgumentException;
-use Minizord\Http\Contract\FWraperInterface;
 use Minizord\Http\Contract\StreamInterface;
-use Minizord\Http\Helper\FWraper;
 use RuntimeException;
 use Throwable;
 
 class Stream implements StreamInterface
 {
     /**
-     * Rsource da stream, tipicamente pego por fopen().
+     * Rsource tipicamente fopen().
      *
      * @var resource|null
      */
     private $stream;
 
     /**
-     * Tamanho da stream;.
+     * Tamanho da stream.
      *
      * @var int|null
      */
-    private ?int $size;
+    private ?int $size = null;
 
     /**
      * Se o ponteiro é manipulável.
@@ -31,41 +29,36 @@ class Stream implements StreamInterface
      * @var bool
      */
     private bool $seekable;
+
     /**
      * Se é possível escrever.
      *
      * @var bool
      */
     private bool $writable;
+
     /**
      * Se é possível ler.
      *
      * @var bool
      */
     private bool $readable;
+
     /**
-     * Apenas um wraper para as funçãos nativas do php que manipulam arquivos como fopen() fclose().
+     * Um wrapper para um fluxo de dados (stream php).
      *
-     * @var FWraperInterface
+     * @param resource|string $body
      */
-    private FWraperInterface $fwraper;
-
-    public function __construct($body = '', $wraper = new FWraper())
+    public function __construct($body = '')
     {
-        $this->fwraper = $wraper;
-
-        if (!is_string($body) && !is_resource($body) && $body !== null) {
-            throw new InvalidArgumentException('Argumento 1 deve ser uma string, resource ou null');
+        if (!is_string($body) && !is_resource($body)) {
+            throw new InvalidArgumentException('O body deve ser uma string ou resource');
         }
 
         if (is_string($body)) {
-            $resource = $this->fwraper->fopen('php://temp', 'rw+');
-            $this->fwraper->fwrite($resource, $body);
+            $resource = fopen('php://temp', 'rw+b');
+            fwrite($resource, $body);
             $body = $resource;
-        }
-
-        if (!is_resource($body)) {
-            throw new InvalidArgumentException('Body deve ser uma string ou resource.');
         }
 
         $this->stream   = $body;
@@ -88,7 +81,7 @@ class Stream implements StreamInterface
             return $key ? null : [];
         }
 
-        $meta = $this->fwraper->stream_get_meta_data($this->stream);
+        $meta = stream_get_meta_data($this->stream);
 
         if ($key === null) {
             return $meta;
@@ -98,7 +91,7 @@ class Stream implements StreamInterface
     }
 
     /**
-     * Retorna o conteúdo da stream.
+     * Retorna o conteúdo restante em uma string.
      *
      * @return string
      */
@@ -106,7 +99,7 @@ class Stream implements StreamInterface
     {
         $this->hasStreamOrError();
 
-        return $this->fwraper->stream_get_contents($this->stream);
+        return stream_get_contents($this->stream);
     }
 
     /**
@@ -120,7 +113,7 @@ class Stream implements StreamInterface
             return null;
         }
 
-        $stats      = $this->fwraper->fstat($this->stream);
+        $stats      = fstat($this->stream);
         $this->size = $stats['size'] ?? null;
 
         return $this->size;
@@ -140,10 +133,10 @@ class Stream implements StreamInterface
             throw new RuntimeException('A stream não é legível');
         }
 
-        $result = $this->fwraper->fread($this->stream, $length);
+        $result = @fread($this->stream, $length);
 
         if ($result === false) {
-            throw new RuntimeException('Não é possível ler a stream');
+            throw new RuntimeException('Não foi possível ler a stream');
         }
 
         return $result;
@@ -173,7 +166,7 @@ class Stream implements StreamInterface
             throw new RuntimeException('A stream não é gravável');
         }
 
-        $write = $this->fwraper->fwrite($this->stream, $string);
+        $write = @fwrite($this->stream, $string);
 
         if ($write === false) {
             throw new RuntimeException('Não foi possível escrever na stream');
@@ -214,13 +207,13 @@ class Stream implements StreamInterface
         $this->hasStreamOrError();
 
         if (!$this->isSeekable()) {
-            throw new RuntimeException('A stream não é buscavél');
+            throw new RuntimeException('O ponteiro da stream é manipulável');
         }
 
-        $result = $this->fwraper->fseek($this->stream, $offset, $whence);
+        $result = fseek($this->stream, $offset, $whence);
 
         if ($result === -1) {
-            throw new RuntimeException('Não foi possível buscar a posição ' . $offset);
+            throw new RuntimeException('Não foi possível alterar o pointeiro da stream para posição ' . $offset);
         }
     }
 
@@ -241,7 +234,11 @@ class Stream implements StreamInterface
      */
     public function eof() : bool
     {
-        return !isset($this->stream) || $this->fwraper->feof($this->stream);
+        if (!isset($this->stream)) {
+            return true;
+        }
+
+        return feof($this->stream);
     }
 
     /**
@@ -253,7 +250,7 @@ class Stream implements StreamInterface
     {
         $this->hasStreamOrError();
 
-        $position = $this->fwraper->ftell($this->stream);
+        $position = @ftell($this->stream);
 
         if ($position === false) {
             throw new RuntimeException('Não é possível setar a posição atual');
@@ -289,8 +286,9 @@ class Stream implements StreamInterface
     public function close() : void
     {
         if (is_resource($this->stream)) {
-            $this->fwraper->fclose($this->stream);
+            fclose($this->stream);
         }
+
         $this->detach();
     }
 
@@ -322,7 +320,6 @@ class Stream implements StreamInterface
         }
     }
 
-    // private
     /**
      * Caso não tenha nada na stream estora um erro.
      *
