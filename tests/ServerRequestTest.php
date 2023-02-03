@@ -11,22 +11,23 @@ use Psr\Http\Message\UploadedFileInterface as PsrUploadedFileInterface;
  * Instâncialização
  */
 test('Deve criar uma nova server request', function () {
-    $request = new ServerRequest('get', 'https://batata.com', []);
+    $request = new ServerRequest(headers: ['Host' => ['batata.com']]);
     expect($request)->toBeInstanceOf(PsrServerRequestInterface::class);
     expect($request->getHeader('host'))->toBe(['batata.com']);
     expect($request->getBody())->toBeInstanceOf(Stream::class);
     expect($request->getBody()->getContents())->toBe('');
     expect($request->getServerParams())->toBe([]);
 
-    $request = new ServerRequest('post', 'https://batata.com', [], 'batata');
+    $request = new ServerRequest(body: 'batata');
     expect($request)->toBeInstanceOf(PsrServerRequestInterface::class);
     expect($request->getBody())->toBeInstanceOf(Stream::class);
     expect($request->getBody()->getContents())->toBe('batata');
     expect($request->getServerParams())->toBe([]);
 
-    $resource = fopen('./tests/for-test.txt', 'rw+b');
+    $tempFileName     = tempnam(sys_get_temp_dir(), 'for-test');
+    $resource         = fopen($tempFileName, 'rw+b');
     fwrite($resource, 'batatinha');
-    $request = new ServerRequest('delete', 'https://batata.com', [], $resource);
+    $request = new ServerRequest(body: $resource);
     expect($request)->toBeInstanceOf(PsrServerRequestInterface::class);
     expect($request->getBody())->toBeInstanceOf(Stream::class);
     expect($request->getBody()->getContents())->toBe('batatinha');
@@ -37,7 +38,7 @@ test('Deve criar uma nova server request', function () {
  * withCookieParams()
  */
 test('Deve criar uma nova instância com os cookies passados', function () {
-    $request = new ServerRequest('get', 'https://batata.com', []);
+    $request = new ServerRequest();
 
     $cookieParames = ['any_cookie' => 'any_cookie_value'];
 
@@ -49,7 +50,7 @@ test('Deve criar uma nova instância com os cookies passados', function () {
  * withQueryParams()
  */
 test('Deve criar uma nova instância com os dados de query params passados', function () {
-    $request = new ServerRequest('get', 'https://batata.com', [], [], []);
+    $request = new ServerRequest();
 
     $queryParams = ['any_query_name' => 'any_query_value'];
 
@@ -58,7 +59,7 @@ test('Deve criar uma nova instância com os dados de query params passados', fun
     expect($request->withQueryParams($queryParams)->getQueryParams())->toBe($queryParams);
 
     $uri     = new Uri('https://example.com/?any_uri_query_name=any_uri_query_value');
-    $request = new ServerRequest('get', $uri, [], [], []);
+    $request = new ServerRequest(uri: $uri);
 
     expect($request)->toBe($request);
     expect($request->getQueryParams())->toBe(['any_uri_query_name' => 'any_uri_query_value']);
@@ -68,7 +69,7 @@ test('Deve criar uma nova instância com os dados de query params passados', fun
  * withParsedBody()
  */
 test('Deve criar uma nova instância com body passado', function () {
-    $request = new ServerRequest('get', 'https://batata.com', []);
+    $request = new ServerRequest();
     $body    = ['any_name' => 'any_value'];
 
     expect($request->withParsedBody($body))->not()->toBe($request);
@@ -76,15 +77,15 @@ test('Deve criar uma nova instância com body passado', function () {
     expect(fn () =>$request->withParsedBody(888))->toThrow(InvalidArgumentException::class);
 
     $_POST   = ['any_post_value' => 'any_post_value'];
-    $request = new ServerRequest('post', '/login', ['Content-Type' => 'application/x-www-form-urlencoded']);
+    $request = new ServerRequest(headers: ['Content-Type' => 'application/x-www-form-urlencoded']);
 
     expect($request->withParsedBody(null))->not()->toBe($request);
     expect($request->withParsedBody(null)->getParsedBody())->toBe($_POST);
 
-    $request = new ServerRequest('post', '/login', ['Content-Type' => 'application/json'], json_encode($body));
+    $request = new ServerRequest(headers: ['Content-Type' => 'application/json'], body: json_encode($body));
     expect(($request->getParsedBody())->any_name)->toBe('any_value');
 
-    $request = new ServerRequest('post', '/login', []);
+    $request = new ServerRequest();
     expect(($request->getParsedBody()))->toBeNull();
 });
 
@@ -92,7 +93,7 @@ test('Deve criar uma nova instância com body passado', function () {
  * withAttribute()
  */
 test('Deve criar uma nova instância com attribute passado', function () {
-    $request = new ServerRequest('get', 'https://batata.com', []);
+    $request = new ServerRequest();
 
     $attributeName  = 'any_name';
     $attributeValue = 'any_value';
@@ -107,7 +108,7 @@ test('Deve criar uma nova instância com attribute passado', function () {
  * withoutAttribute()
  */
 test('Deve criar uma nova instância sem o attribute passado', function () {
-    $request = new ServerRequest('get', 'https://batata.com', []);
+    $request = new ServerRequest();
 
     $attributeName  = 'any_name';
     $attributeValue = 'any_value';
@@ -129,7 +130,7 @@ test('Deve retornar uma nova instância com os arquivos de upload passados', fun
 
     $ups = [$up1, $up2];
 
-    $request = new ServerRequest('post', 'https://batata.com', []);
+    $request = new ServerRequest();
 
     expect($request->getUploadedFiles())->toBe([]);
 
@@ -137,7 +138,7 @@ test('Deve retornar uma nova instância com os arquivos de upload passados', fun
 });
 
 test('Deve estourar um erro ao passar algo que não seja um PsrUploadedFileInterface', function () {
-    $request = new ServerRequest('post', 'https://batata.com', []);
+    $request = new ServerRequest();
 
     expect(fn () => $request->withUploadedFiles(['any_value']))->toThrow(InvalidArgumentException::class);
 });

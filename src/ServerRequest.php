@@ -5,36 +5,82 @@ namespace Minizord\Http;
 use InvalidArgumentException;
 use Minizord\Http\Contract\ServerRequestInterface;
 use Psr\Http\Message\UploadedFileInterface as PsrUploadedFileInterface;
-use Psr\Http\Message\UriInterface as PsrPsrUriInterface;
+use Psr\Http\Message\UriInterface as PsrUriInterface;
 
 class ServerRequest implements ServerRequestInterface
 {
     use MessageTrait;
     use RequestTrait;
 
+    /**
+     * Atributos da request.
+     *
+     * @var array
+     */
     private array $attributes;
+
+    /**
+     * Server params tipicamente $_SERVER.
+     *
+     * @var array
+     */
     private array $serverParams  = [];
+
+    /**
+     * Cookie params tipicamente $_COOKIE.
+     *
+     * @var array
+     */
     private array $cookieParams  = [];
+
+    /**
+     * Query params tipicamente $_GET.
+     *
+     * @var array
+     */
     private array $queryParams   = [];
     // UploadedFileInterface
+    /**
+     * Array arquivos upados.
+     *
+     * @var PsrUploadedFileInterface[]
+     */
     private array $uploadedFiles          = [];
+
+    /**
+     * @var null|array|object
+     */
     private null|array|object $parsedBody = null;
 
     // Representação de uma solicitação HTTP recebida do lado do servidor.
-    public function __construct(string $method, $uri, array $headers = [], $body = null, array $serverParams = [], array $attributes = [], string $version = '1.1')
-    {
+    public function __construct(
+        array $serverParams = [],
+        array $uploadedFiles = [],
+        array $cookieParams = [],
+        array $queryParams = [],
+        PsrUriInterface|string $uri = '',
+        array $headers = [],
+        string $method =  'GET',
+        mixed $body = null,
+        string $version = '1.1',
+        array $attributes = [],
+    ) {
         $this->validateMethod($method);
         $this->validateProtocolVersion($version);
+        $this->validateUploadedFiles($uploadedFiles);
 
-        if (!($uri instanceof PsrPsrUriInterface)) {
+        if (!($uri instanceof PsrUriInterface)) {
             $uri = new Uri($uri);
         }
 
-        $this->method       = $method;
-        $this->uri          = $uri;
-        $this->serverParams = $serverParams;
-        $this->protocol     = $version;
-        $this->attributes   = $attributes;
+        $this->method        = $method;
+        $this->uri           = $uri;
+        $this->protocol      = $version;
+        $this->attributes    = $attributes;
+        $this->serverParams  = $serverParams;
+        $this->cookieParams  = $cookieParams;
+        $this->uploadedFiles = $uploadedFiles;
+        $this->queryParams   = $queryParams;
 
         $this->setHeaders($headers);
 
@@ -65,11 +111,7 @@ class ServerRequest implements ServerRequestInterface
 
     public function withUploadedFiles(array $uploadedFiles) : self
     {
-        foreach ($uploadedFiles as $uploadedFile) {
-            if (!$uploadedFile instanceof PsrUploadedFileInterface) {
-                throw new InvalidArgumentException('O array só deve conter PsrUploadedFileInterface');
-            }
-        }
+        $this->validateUploadedFiles($uploadedFiles);
 
         $clone                = clone $this;
         $clone->uploadedFiles = $uploadedFiles;
@@ -133,7 +175,7 @@ class ServerRequest implements ServerRequestInterface
         return $this->uploadedFiles;
     }
 
-    public function getParsedBody() : null|array|object
+    public function getParsedBody() : object|array|null
     {
         if ($this->parsedBody !== null) {
             return $this->parsedBody;
@@ -158,5 +200,14 @@ class ServerRequest implements ServerRequestInterface
     public function getAttribute($name, $default = null) : mixed
     {
         return $this->attributes[$name] ?? $default;
+    }
+
+    private function validateUploadedFiles(array $uploadedFiles) : void
+    {
+        foreach ($uploadedFiles as $uploadedFile) {
+            if (!$uploadedFile instanceof PsrUploadedFileInterface) {
+                throw new InvalidArgumentException('O array só deve conter PsrUploadedFileInterface');
+            }
+        }
     }
 }
