@@ -132,7 +132,6 @@ trait RequestTrait
         return $clone;
     }
 
-    // tchar = "!" / "#" / "$" / "%" / "&" / "'" / "*" / "+" / "-" / "." / "^" / "_" / "`" / "|" / "~" / DIGIT / ALPHA
     /**
      * Valida o método http.
      *
@@ -141,8 +140,7 @@ trait RequestTrait
      */
     private function validateMethod(string $method) : void
     {
-        if (!preg_match('/^[\!\#\$\%\&\'\*\+\-\.\^\_\`\|\~a-zA-Z0-9]+$/', $method)) {
-            // TODO: acho que não faz mal criar um array com os métodos mais usados e checar se está dentro
+        if (!preg_match('/^[a-zA-Z]+$/', $method)) {
             throw new InvalidArgumentException('O método deve ser uma string');
         }
     }
