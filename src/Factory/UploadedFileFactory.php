@@ -3,11 +3,10 @@
 namespace Minizord\Http\Factory;
 
 use InvalidArgumentException;
-use Minizord\Http\Contract\UploadedFileInterface;
 use Minizord\Http\Stream;
 use Minizord\Http\UploadedFile;
 use Psr\Http\Message\{
-    StreamInterface as PsrStreamInterface,
+    StreamInterface,
     UploadedFileFactoryInterface as PsrUploadedFileFactoryInterface
 };
 
@@ -16,28 +15,28 @@ class UploadedFileFactory implements PsrUploadedFileFactoryInterface
     /**
      * Cria uma UploadedFile.
      *
-     * @param  PsrStreamInterface    $stream
-     * @param  int|null              $size
-     * @param  int                   $error
-     * @param  string|null           $clientFilename
-     * @param  string|null           $clientMediaType
-     * @return UploadedFileInterface
+     * @param  StreamInterface $stream
+     * @param  int|null        $size
+     * @param  int             $error
+     * @param  string|null     $clientFilename
+     * @param  string|null     $clientMediaType
+     * @return UploadedFile
      */
     public function createUploadedFile(
-        PsrStreamInterface $stream,
+        StreamInterface $stream,
         int $size = null,
         int $error = \UPLOAD_ERR_OK,
         string $clientFilename = null,
         string $clientMediaType = null
-    ) : UploadedFileInterface {
+    ) : UploadedFile {
         return new UploadedFile($stream, $size, $error, $clientFilename, $clientMediaType);
     }
 
     /**
      * Cria um array de UploadedFiles através do array passado ou do $_FILES.
      *
-     * @param  array|null $files
-     * @return array
+     * @param  array|null          $files
+     * @return array<UploadedFile>
      */
     public function createUploadedFilesFromGlobal(array $files = null) : array
     {
@@ -60,6 +59,12 @@ class UploadedFileFactory implements PsrUploadedFileFactoryInterface
         return $uploadedFiles;
     }
 
+    /**
+     * Simplifica o array de files já que ele pode vir de duas formas diferentes.
+     *
+     * @param  array $files
+     * @return array
+     */
     private function simplifyFiles(array $files) : array
     {
         $simplifiedFiles = [];
@@ -81,6 +86,12 @@ class UploadedFileFactory implements PsrUploadedFileFactoryInterface
         return $simplifiedFiles;
     }
 
+    /**
+     * Verifica se os dados principais estão setados.
+     *
+     * @param  array $fileData
+     * @return void
+     */
     private function validateFileData(array $fileData) : void
     {
         if (
