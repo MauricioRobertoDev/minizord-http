@@ -174,3 +174,5 @@ Porem com pesquisa o que entendi é ser proposital, há várias RFC que ainda n�
  - [Mozilla - Cabeçalhos HTTP](https://developer.mozilla.org/pt-BR/docs/Web/HTTP/Headers)
  - [IANA - Lista de códigos HTTP](http://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml)
  - [PHP - Lista de erros ao upar um arquivo](https://www.php.net/manual/en/features.file-upload.errors.php)
+ - [PHP - Diferença entre 1 arquivo e vários enviados](https://www.php.net/manual/en/reserved.variables.files)
+ - [PHP - Dicas para tratar o $_FILES](https://www.php.net/manual/en/features.file-upload.php)
