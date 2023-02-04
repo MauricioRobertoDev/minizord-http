@@ -95,18 +95,18 @@ class Response implements ResponseInterface
     /**
      * Representação de uma resposta de saída do lado do servidor.
      *
-     * @param int         $status
-     * @param array       $headers
-     * @param string      $body
-     * @param string      $version
-     * @param string|null $reason
+     * @param int    $status
+     * @param array  $headers
+     * @param string $body
+     * @param string $version
+     * @param string $reason
      */
     public function __construct(
         int $status = 200,
         array $headers = [],
         $body = null,
         string $version = '1.1',
-        string $reason = null
+        string $reason = ''
     ) {
         if ($body) {
             $this->body = new Stream($body);
