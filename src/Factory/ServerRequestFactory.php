@@ -5,7 +5,7 @@ namespace Minizord\Http\Factory;
 use Minizord\Http\ServerRequest;
 use Psr\Http\Message\ServerRequestFactoryInterface;
 
-class ServerRequestFactory implements ServerRequestFactoryInterface
+final class ServerRequestFactory implements ServerRequestFactoryInterface
 {
     /**
      * Crima uma ServerRequest.

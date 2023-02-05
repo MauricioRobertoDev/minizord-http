@@ -6,7 +6,7 @@ use InvalidArgumentException;
 use Minizord\Http\Stream;
 use Psr\Http\Message\StreamFactoryInterface;
 
-class StreamFactory implements StreamFactoryInterface
+final class StreamFactory implements StreamFactoryInterface
 {
     /**
      * Cria uma Stream.

@@ -5,7 +5,7 @@ namespace Minizord\Http;
 use InvalidArgumentException;
 use Psr\Http\Message\UriInterface;
 
-class Uri implements UriInterface
+final class Uri implements UriInterface
 {
     private const CHAR_UNRESERVED  = 'a-zA-Z0-9\-\.\_\~';
 
@@ -343,7 +343,6 @@ class Uri implements UriInterface
      */
     private function filterPath(string $path): string
     {
-        // está separado assim para que você possa interpretar de uma melhor forma
         $regex = '/(?:[^' . self::CHAR_UNRESERVED . self::CHAR_SUB_DELIMS . '\%\/\@]+|%(?![A-Fa-f0-9]{2}))/';
 
         return preg_replace_callback($regex, [$this, 'rawUrlEncode'], $path);

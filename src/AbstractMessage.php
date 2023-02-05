@@ -3,9 +3,10 @@
 namespace Minizord\Http;
 
 use InvalidArgumentException;
+use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\StreamInterface;
 
-trait MessageTrait
+abstract class AbstractMessage implements MessageInterface
 {
     /**
      * Versão do protocolo.
@@ -223,14 +224,12 @@ trait MessageTrait
         return false;
     }
 
-    // private
-
     /**
      * Valida a versão do protocolo.
      *
      * @param string $version
      */
-    private function validateProtocolVersion($version): void
+    protected function validateProtocolVersion($version): void
     {
         if (! $version) {
             throw new InvalidArgumentException('Protocol version não pode ser vazio');
@@ -238,6 +237,36 @@ trait MessageTrait
 
         if (! preg_match('#^(1\.[01])$#', $version)) {
             throw new InvalidArgumentException('Protocol version não suportado');
+        }
+    }
+
+    /**
+     * Retorna o nome original do header.
+     */
+    protected function getOriginalHeaderName(string $name): string|null
+    {
+        return $this->headerNames[strtolower($name)] ?? null;
+    }
+
+    /**
+     * Adiciona vários headers ou apenas os valores caso já exista.
+     */
+    protected function setHeaders(array $headers, bool $merge = false): void
+    {
+        foreach ($headers as $header => $value) {
+            $header     = $this->filterHeaderName($header);
+            $value      = $this->filterHeaderValue($value);
+
+            if ($this->hasHeader($header) && $merge) {
+                $header                 = $this->getOriginalHeaderName($header);
+                $this->headers[$header] = [...$this->getHeader($header), ...$value];
+            } elseif ($this->hasHeader($header) && $merge === false) {
+                $header                 = $this->getOriginalHeaderName($header);
+                $this->headers[$header] = [...$value];
+            } else {
+                $this->headerNames[strtolower($header)] = $header;
+                $this->headers[$header]                 = $value;
+            }
         }
     }
 
@@ -274,35 +303,5 @@ trait MessageTrait
         }
 
         return $value;
-    }
-
-    /**
-     * Retorna o nome original do header.
-     */
-    private function getOriginalHeaderName(string $name): string|null
-    {
-        return $this->headerNames[strtolower($name)] ?? null;
-    }
-
-    /**
-     * Adiciona vários headers ou apenas os valores caso já exista.
-     */
-    private function setHeaders(array $headers, bool $merge = false): void
-    {
-        foreach ($headers as $header => $value) {
-            $header     = $this->filterHeaderName($header);
-            $value      = $this->filterHeaderValue($value);
-
-            if ($this->hasHeader($header) && $merge) {
-                $header                 = $this->getOriginalHeaderName($header);
-                $this->headers[$header] = [...$this->getHeader($header), ...$value];
-            } elseif ($this->hasHeader($header) && $merge === false) {
-                $header                 = $this->getOriginalHeaderName($header);
-                $this->headers[$header] = [...$value];
-            } else {
-                $this->headerNames[strtolower($header)] = $header;
-                $this->headers[$header]                 = $value;
-            }
-        }
     }
 }

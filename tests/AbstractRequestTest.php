@@ -1,14 +1,13 @@
 <?php
 
-use Minizord\Http\RequestTrait;
+use Minizord\Http\AbstractRequest;
 use Minizord\Http\Uri;
 
 /*
  * withMethod()
  */
 test('Deve uma nova instância com o método passado', function () {
-    $request = new class() {
-        use RequestTrait;
+    $request = new class() extends AbstractRequest {
     };
 
     expect($request->withMethod('post')->getMethod())->toBe('post');
@@ -16,8 +15,7 @@ test('Deve uma nova instância com o método passado', function () {
 });
 
 test('Deve estourar uma erro caso passe um método inválido', function () {
-    $request = new class() {
-        use RequestTrait;
+    $request = new class() extends AbstractRequest {
     };
 
     expect(fn () => $request->withMethod(888)->getMethod())->toThrow(InvalidArgumentException::class);
@@ -30,8 +28,7 @@ test('Deve estourar uma erro caso passe um método inválido', function () {
  * withRequestTarget()
  */
 test('Deve uma nova instância com o request target passado', function () {
-    $request = new class() {
-        use RequestTrait;
+    $request = new class() extends AbstractRequest {
     };
 
     expect($request->withRequestTarget('/batata')->getRequestTarget())->toBe('/batata');
@@ -40,8 +37,7 @@ test('Deve uma nova instância com o request target passado', function () {
 });
 
 test('Deve estourar um erro caso passe um target inválido', function () {
-    $request = new class() {
-        use RequestTrait;
+    $request = new class() extends AbstractRequest {
     };
 
     expect(fn () =>$request->withRequestTarget('/path/ path'))->toThrow(InvalidArgumentException::class);
@@ -53,8 +49,7 @@ test('Deve estourar um erro caso passe um target inválido', function () {
  * withUri()
  */
 test('Deve uma nova instância com a uri passada e setando o host da uri na request', function () {
-    $request = new class() {
-        use RequestTrait;
+    $request = new class() extends AbstractRequest {
     };
     $request = $request->withHeader('host', 'batatinha.com');
 
@@ -66,8 +61,7 @@ test('Deve uma nova instância com a uri passada e setando o host da uri na requ
 });
 
 test('Deve retornar uma nova instância com a nova uri e preservando o host atual da request', function () {
-    $request = new class() {
-        use RequestTrait;
+    $request = new class() extends AbstractRequest {
     };
 
     $uri     = new Uri('https://example.com');
@@ -78,8 +72,7 @@ test('Deve retornar uma nova instância com a nova uri e preservando o host atua
 });
 
 test('Deve retornar uma nova instância com a nova uri e sem nenhum host pois nenhum tem', function () {
-    $request = new class() {
-        use RequestTrait;
+    $request = new class() extends AbstractRequest {
     };
 
     $uri     = new Uri('https://example.com');
@@ -90,8 +83,7 @@ test('Deve retornar uma nova instância com a nova uri e sem nenhum host pois ne
 });
 
 test('Deve retornar uma nova instância com a nova uri com host da api já que a request não tem', function () {
-    $request = new class() {
-        use RequestTrait;
+    $request = new class() extends AbstractRequest {
     };
 
     $uri     = new Uri('https://example.com');

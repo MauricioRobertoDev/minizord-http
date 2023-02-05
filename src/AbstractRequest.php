@@ -3,26 +3,25 @@
 namespace Minizord\Http;
 
 use InvalidArgumentException;
+use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\UriInterface;
 
-trait RequestTrait
+abstract class AbstractRequest extends AbstractMessage implements RequestInterface
 {
-    use MessageTrait;
-
     /**
      * Método http.
      */
-    private string $method = 'GET';
+    protected string $method = 'GET';
 
     /**
      * Destino da solicitação.
      */
-    private string|null $requestTarget = null;
+    protected string|null $requestTarget = null;
 
     /**
      * Uri da request.
      */
-    private UriInterface $uri;
+    protected UriInterface $uri;
 
     /**
      * Retorna o destino da solicitação.
@@ -138,10 +137,44 @@ trait RequestTrait
     /**
      * Valida o método http.
      */
-    private function validateMethod(string $method): void
+    protected function validateMethod(string $method): void
     {
         if (! preg_match('/^[a-zA-Z]+$/', $method)) {
             throw new InvalidArgumentException('O método deve ser uma string');
+        }
+    }
+
+    /**
+     * Configura os dados na request.
+     *
+     * @param StreamInterface|resource|string $body
+     */
+    protected function init(
+        string $method = 'GET',
+        UriInterface|string $uri = '',
+        array $headers = [],
+        mixed $body = null,
+        string $version = '1.1'
+    ): void {
+        $this->validateMethod($method);
+        $this->validateProtocolVersion($version);
+
+        if (! ($uri instanceof UriInterface)) {
+            $uri = new Uri($uri);
+        }
+
+        $this->method   = $method;
+        $this->uri      = $uri;
+        $this->protocol = $version;
+
+        $this->setHeaders($headers);
+
+        if (! $this->hasHeader('Host')) {
+            $this->setHostFromUri();
+        }
+
+        if ($body) {
+            $this->body = new Stream($body);
         }
     }
 }

@@ -7,7 +7,7 @@ use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UploadedFileInterface;
 use RuntimeException;
 
-class UploadedFile implements UploadedFileInterface
+final class UploadedFile implements UploadedFileInterface
 {
     public const ERRORS = [
         UPLOAD_ERR_OK         => 'Upado com sucesso.',

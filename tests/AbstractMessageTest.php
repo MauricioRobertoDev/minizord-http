@@ -1,6 +1,6 @@
 <?php
 
-use Minizord\Http\MessageTrait;
+use Minizord\Http\AbstractMessage;
 use Minizord\Http\Stream;
 use Psr\Http\Message\StreamInterface;
 
@@ -8,8 +8,7 @@ use Psr\Http\Message\StreamInterface;
  * withProtocolVersion()
  */
 test('Deve retornar uma nova instância com o (protocol version) passado', function () {
-    $message = new class() {
-        use MessageTrait;
+    $message = new class() extends AbstractMessage {
     };
 
     expect($message->getProtocolVersion())->toBe('1.1');
@@ -18,8 +17,7 @@ test('Deve retornar uma nova instância com o (protocol version) passado', funct
 });
 
 test('Deve estourar um erro caso tente passar um protocol version inválido', function () {
-    $message = new class() {
-        use MessageTrait;
+    $message = new class() extends AbstractMessage {
     };
 
     expect(fn () => $message->withProtocolVersion('12.8'))->toThrow(InvalidArgumentException::class);
@@ -32,8 +30,7 @@ test('Deve estourar um erro caso tente passar um protocol version inválido', fu
  * withHeader()
  */
 test('Deve retornar uma nova instância com os headers passados', function () {
-    $message = new class() {
-        use MessageTrait;
+    $message = new class() extends AbstractMessage {
     };
 
     expect($message->getHeaders())->toBe([]);
@@ -44,8 +41,7 @@ test('Deve retornar uma nova instância com os headers passados', function () {
 });
 
 test('Deve estourar um erro caso passe headers inválidos', function () {
-    $message = new class() {
-        use MessageTrait;
+    $message = new class() extends AbstractMessage {
     };
 
     expect(fn () => $message->withHeader('any:name', ['any_value']))->toThrow(InvalidArgumentException::class);
@@ -60,8 +56,7 @@ test('Deve estourar um erro caso passe headers inválidos', function () {
 });
 
 test('Deve retornar uma nova instância com os valores dos headers substituidos', function () {
-    $message = new class() {
-        use MessageTrait;
+    $message = new class() extends AbstractMessage {
     };
 
     expect($message->getHeaders())->toBe([]);
@@ -76,8 +71,7 @@ test('Deve retornar uma nova instância com os valores dos headers substituidos'
  * hasHeader()
  */
 test('Deve retornar se determinado (header) existe na requisição', function () {
-    $message = new class() {
-        use MessageTrait;
+    $message = new class() extends AbstractMessage {
     };
 
     expect($message->hasHeader('any_header'))->toBeFalse();
@@ -88,8 +82,7 @@ test('Deve retornar se determinado (header) existe na requisição', function ()
  * getHeaderLine()
  */
 test('Deve retornar os valores de determinado (header) em uma string', function () {
-    $message = new class() {
-        use MessageTrait;
+    $message = new class() extends AbstractMessage {
     };
 
     expect($message->getHeaderLine('any_header'))->toBe('');
@@ -100,8 +93,7 @@ test('Deve retornar os valores de determinado (header) em uma string', function 
  * withAddedHeader()
  */
 test('Deve retornar uma nova instância com o (header) passado e adicionado os novos valores', function () {
-    $message = new class() {
-        use MessageTrait;
+    $message = new class() extends AbstractMessage {
     };
 
     expect($message->getHeaders())->toBe([]);
@@ -111,8 +103,7 @@ test('Deve retornar uma nova instância com o (header) passado e adicionado os n
 });
 
 test('Deve estourar um erro caso tente passar headers inválidos', function () {
-    $message = new class() {
-        use MessageTrait;
+    $message = new class() extends AbstractMessage {
     };
 
     expect(fn () => $message->withAddedHeader('any_name_2', ''))->toThrow(InvalidArgumentException::class);
@@ -126,8 +117,7 @@ test('Deve estourar um erro caso tente passar headers inválidos', function () {
  * withBody()
  */
 test('Deve retornar a stream', function () {
-    $message = new class() {
-        use MessageTrait;
+    $message = new class() extends AbstractMessage {
     };
 
     expect($message->getBody())->toBeInstanceOf(StreamInterface::class);
@@ -141,8 +131,7 @@ test('Deve retornar a stream', function () {
  * inHeader()
  */
 test('Deve retornar se TODOS os valores passados estão nos valores do header', function () {
-    $message = new class() {
-        use MessageTrait;
+    $message = new class() extends AbstractMessage {
     };
 
     expect($message->inHeader('non_exists_header', 'any_value'))->toBeFalse();
@@ -160,8 +149,7 @@ test('Deve retornar se TODOS os valores passados estão nos valores do header', 
  * inHeaderAny()
  */
 test('Deve retornar se QUALQUER dos valores passados estão nos valores do header', function () {
-    $message = new class() {
-        use MessageTrait;
+    $message = new class() extends AbstractMessage {
     };
 
     expect($message->inHeaderAny('non_exists_header', ['any_value']))->toBeFalse();

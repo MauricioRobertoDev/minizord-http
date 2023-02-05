@@ -5,7 +5,7 @@ namespace Minizord\Http\Factory;
 use Minizord\Http\Request;
 use Psr\Http\Message\RequestFactoryInterface;
 
-class RequestFactory implements RequestFactoryInterface
+final class RequestFactory implements RequestFactoryInterface
 {
     /**
      * Cria uma Request.

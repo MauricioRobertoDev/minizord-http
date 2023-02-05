@@ -8,7 +8,7 @@ use Minizord\Http\UploadedFile;
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UploadedFileFactoryInterface;
 
-class UploadedFileFactory implements UploadedFileFactoryInterface
+final class UploadedFileFactory implements UploadedFileFactoryInterface
 {
     /**
      * Cria uma UploadedFile.

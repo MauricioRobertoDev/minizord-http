@@ -5,7 +5,7 @@ namespace Minizord\Http\Factory;
 use Minizord\Http\Response;
 use Psr\Http\Message\ResponseFactoryInterface;
 
-class ResponseFactory implements ResponseFactoryInterface
+final class ResponseFactory implements ResponseFactoryInterface
 {
     /**
      * Cria uma Response.

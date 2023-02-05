@@ -5,7 +5,7 @@ namespace Minizord\Http\Factory;
 use Minizord\Http\Uri;
 use Psr\Http\Message\UriFactoryInterface;
 
-class UriFactory implements UriFactoryInterface
+final class UriFactory implements UriFactoryInterface
 {
     /**
      * Cria uma Uri.

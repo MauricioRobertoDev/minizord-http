@@ -7,7 +7,7 @@ use Psr\Http\Message\StreamInterface;
 use RuntimeException;
 use Throwable;
 
-class Stream implements StreamInterface
+final class Stream implements StreamInterface
 {
     /**
      * Rsource tipicamente fopen().
