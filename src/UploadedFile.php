@@ -3,8 +3,8 @@
 namespace Minizord\Http;
 
 use InvalidArgumentException;
-use Minizord\Http\Contract\UploadedFileInterface;
-use Psr\Http\Message\StreamInterface as PsrStreamInterface;
+use Psr\Http\Message\StreamInterface;
+use Psr\Http\Message\UploadedFileInterface;
 use RuntimeException;
 
 class UploadedFile implements UploadedFileInterface
@@ -22,70 +22,52 @@ class UploadedFile implements UploadedFileInterface
 
     /**
      * Tamanho do arquivo.
-     *
-     * @var int
      */
     private int $size;
 
     /**
      * Código de erro.
-     *
-     * @var int
      */
     private int $error;
 
     /**
      * Se foi movido ou não.
-     *
-     * @var bool
      */
     private bool $moved                 = false;
 
     /**
      * Filename do arquivo.
-     *
-     * @var string|null
      */
-    private ?string $file               = null;
+    private string|null $file               = null;
 
     /**
      * Nome do arquivo.
-     *
-     * @var string|null
      */
-    private ?string $clientFilename     = null;
+    private string|null $clientFilename     = null;
 
     /**
      * Tipo do arquivo.
-     *
-     * @var string|null
      */
-    private ?string $clientMediaType    = null;
+    private string|null $clientMediaType    = null;
 
     /**
      * Stream do arquivo.
-     *
-     * @var PsrStreamInterface|null
      */
-    private ?PsrStreamInterface $stream = null;
+    private StreamInterface|null $stream = null;
 
     /**
      * Representa um arquivo carregado por meio de uma solicitação HTTP.
      *
-     * @param PsrStreamInterface|resource|string $streamOrFile
-     * @param int                                $size
-     * @param int                                $error
-     * @param string|null                        $clientFilename
-     * @param string|null                        $clientMediaType
+     * @param StreamInterface|resource|string $streamOrFile
      */
     public function __construct(
         $streamOrFile,
         int $size,
         int $error,
-        string $clientFilename = null,
-        string $clientMediaType = null
+        string|null $clientFilename = null,
+        string|null $clientMediaType = null
     ) {
-        if (!isset(self::ERRORS[$error])) {
+        if (! isset(self::ERRORS[$error])) {
             throw new InvalidArgumentException('O erro deve ser um "UPLOAD_ERR_" válido');
         }
 
@@ -110,7 +92,7 @@ class UploadedFile implements UploadedFileInterface
             return;
         }
 
-        if ($streamOrFile instanceof PsrStreamInterface) {
+        if ($streamOrFile instanceof StreamInterface) {
             $this->stream = $streamOrFile;
 
             return;
@@ -121,10 +103,8 @@ class UploadedFile implements UploadedFileInterface
 
     /**
      * Retorna um stream que representa o arquivo carregado.
-     *
-     * @return PsrStreamInterface
      */
-    public function getStream() : PsrStreamInterface
+    public function getStream(): StreamInterface
     {
         $this->hasMovedThrowException();
 
@@ -132,7 +112,7 @@ class UploadedFile implements UploadedFileInterface
             throw new RuntimeException(self::ERRORS[$this->error]);
         }
 
-        if ($this->stream instanceof PsrStreamInterface) {
+        if ($this->stream instanceof StreamInterface) {
             return $this->stream;
         }
 
@@ -150,10 +130,9 @@ class UploadedFile implements UploadedFileInterface
     /**
      * Mova o arquivo carregado para um novo local.
      *
-     * @param  string $targetPath
-     * @return void
+     * @param string $targetPath
      */
-    public function moveTo($targetPath) : void
+    public function moveTo($targetPath): void
     {
         $this->hasMovedThrowException();
 
@@ -161,20 +140,20 @@ class UploadedFile implements UploadedFileInterface
             throw new RuntimeException(self::ERRORS[$this->error]);
         }
 
-        if (!is_string($targetPath) || !trim($targetPath)) {
+        if (! is_string($targetPath) || ! trim($targetPath)) {
             throw new InvalidArgumentException('O caminho para mover o arquivo deve ser passado em forma de string');
         }
 
         $targetDirectory = dirname($targetPath);
 
-        if (!is_dir($targetDirectory) || !is_writable($targetDirectory)) {
+        if (! is_dir($targetDirectory) || ! is_writable($targetDirectory)) {
             throw new RuntimeException('O diretório escolhido para mover o arquivo não existe ou não é gravável: ' . $targetDirectory);
         }
 
         if ($this->file) {
             $this->moved = PHP_SAPI === 'cli' ? rename($this->file, $targetPath) : move_uploaded_file($this->file, $targetPath);
 
-            if (!$this->moved) {
+            if (! $this->moved) {
                 throw new RuntimeException('O arquivo enviado não pôde ser movido para: ' . $targetPath);
             }
 
@@ -183,13 +162,13 @@ class UploadedFile implements UploadedFileInterface
 
         $resource = @fopen($targetPath, 'r+');
 
-        if (!$resource) {
+        if (! $resource) {
             throw new RuntimeException('O arquivo ' . $targetPath . ' não pôde ser aberto');
         }
 
         $this->stream->rewind();
 
-        while (!$this->stream->eof()) {
+        while (! $this->stream->eof()) {
             fwrite($resource, $this->stream->read(1048576));
         }
 
@@ -200,70 +179,56 @@ class UploadedFile implements UploadedFileInterface
 
     /**
      * Retorna o tamanho do arquivo.
-     *
-     * @return int
      */
-    public function getSize() : int
+    public function getSize(): int
     {
         return $this->size;
     }
 
     /**
      * Retorna o erro associado ao arquivo carregado.
-     *
-     * @return int
      */
-    public function getError() : int
+    public function getError(): int
     {
         return $this->error;
     }
 
     /**
      * Retorna a mensagem do erro ssociado ao arquivo carregado.
-     *
-     * @return string
      */
-    public function getErrorMessage() : string
+    public function getErrorMessage(): string
     {
         return self::ERRORS[$this->error] ?? '';
     }
 
     /**
      * Retorna o nome do arquivo enviado pelo cliente.
-     *
-     * @return string|null
      */
-    public function getClientFilename() : ?string
+    public function getClientFilename(): string|null
     {
         return $this->clientFilename;
     }
 
     /**
      * Retorna o tipo de mídia enviado pelo cliente.
-     *
-     * @return string|null
      */
-    public function getClientMediaType() : ?string
+    public function getClientMediaType(): string|null
     {
         return $this->clientMediaType;
     }
 
     /**
      * Retorna se o arquivo carregado já foi movido.
-     *
-     * @return bool
      */
-    public function hasBeenMoved() : bool
+    public function hasBeenMoved(): bool
     {
         return $this->moved;
     }
 
     /**
      * Estoura um erro caso o arquivo já tenha sido movido.
-     *
-     * @return void
      */
-    private function hasMovedThrowException() : void
+    private function hasMovedThrowException(): void
     {
         if ($this->moved) {
             throw new RuntimeException('O arquivo já foi movido');

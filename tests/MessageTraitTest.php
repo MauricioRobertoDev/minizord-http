@@ -2,7 +2,7 @@
 
 use Minizord\Http\MessageTrait;
 use Minizord\Http\Stream;
-use Psr\Http\Message\StreamInterface as PsrStreamInterface;
+use Psr\Http\Message\StreamInterface;
 
 /*
  * withProtocolVersion()
@@ -130,11 +130,11 @@ test('Deve retornar a stream', function () {
         use MessageTrait;
     };
 
-    expect($message->getBody())->toBeInstanceOf(PsrStreamInterface::class);
+    expect($message->getBody())->toBeInstanceOf(StreamInterface::class);
 
     $message = $message->withBody(new Stream('batata'));
 
-    expect($message->getBody())->toBeInstanceOf(PsrStreamInterface::class);
+    expect($message->getBody())->toBeInstanceOf(StreamInterface::class);
 });
 
 /*

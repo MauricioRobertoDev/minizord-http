@@ -1,16 +1,16 @@
 <?php
 
 use Minizord\Http\Uri;
-use Psr\Http\Message\UriInterface as PsrUriInterface;
+use Psr\Http\Message\UriInterface;
 
 /*
  * Instâncialização
  */
-test('Deve ser uma instância da PsrUriInterface', function () {
+test('Deve ser uma instância da UriInterface', function () {
     $url = 'HTTPs://domain.com.br/nothing/?query=query_value#fragment';
     $uri = new Uri($url);
 
-    expect($uri)->toBeInstanceOf(PsrUriInterface::class);
+    expect($uri)->toBeInstanceOf(UriInterface::class);
     expect($uri->getHost())->toBe('domain.com.br');
     expect($uri->getFragment())->toBe('fragment');
     expect($uri->getQuery())->toBe('query=query_value');

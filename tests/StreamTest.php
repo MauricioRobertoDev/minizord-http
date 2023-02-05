@@ -1,7 +1,7 @@
 <?php
 
 use Minizord\Http\Stream;
-use Psr\Http\Message\StreamInterface as PsrStreamInterface;
+use Psr\Http\Message\StreamInterface;
 
 /*
  * Instâncialização
@@ -9,7 +9,7 @@ use Psr\Http\Message\StreamInterface as PsrStreamInterface;
 test('Deve instânciar uma classe stream passando nada', function () {
     $stream = new Stream();
 
-    expect($stream)->toBeInstanceOf(PsrStreamInterface::class);
+    expect($stream)->toBeInstanceOf(StreamInterface::class);
     expect($stream->hasStream())->toBeTrue();
     expect($stream->getSize())->toBe(0);
     expect($stream->isReadable())->toBeTrue();
@@ -24,7 +24,7 @@ test('Deve instânciar uma classe stream passando nada', function () {
 test('Deve instânciar uma classe stream passando uma string de dados', function () {
     $stream = new Stream('batata');
 
-    expect($stream)->toBeInstanceOf(PsrStreamInterface::class);
+    expect($stream)->toBeInstanceOf(StreamInterface::class);
     expect($stream->hasStream())->toBeTrue();
     expect($stream->getSize())->toBe(6);
     expect($stream->isReadable())->toBeTrue();
@@ -41,7 +41,7 @@ test('Deve instânciar uma classe stream passando um resource', function () {
     $resource         = fopen($tempFileName, 'rw+');
     $stream           = new Stream($resource);
 
-    expect($stream)->toBeInstanceOf(PsrStreamInterface::class);
+    expect($stream)->toBeInstanceOf(StreamInterface::class);
     expect($stream->hasStream())->toBeTrue();
     expect($stream->getSize())->toBe(0);
     expect($stream->isReadable())->toBeTrue();

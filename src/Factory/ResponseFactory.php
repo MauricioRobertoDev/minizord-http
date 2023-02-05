@@ -9,12 +9,8 @@ class ResponseFactory implements ResponseFactoryInterface
 {
     /**
      * Cria uma Response.
-     *
-     * @param  int      $code
-     * @param  string   $reasonPhrase
-     * @return Response
      */
-    public function createResponse(int $code = 200, string $reasonPhrase = '') : Response
+    public function createResponse(int $code = 200, string $reasonPhrase = ''): Response
     {
         return new Response(status: $code, reason: $reasonPhrase);
     }

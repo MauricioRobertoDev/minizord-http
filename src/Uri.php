@@ -3,7 +3,7 @@
 namespace Minizord\Http;
 
 use InvalidArgumentException;
-use Minizord\Http\Contract\UriInterface;
+use Psr\Http\Message\UriInterface;
 
 class Uri implements UriInterface
 {
@@ -15,64 +15,46 @@ class Uri implements UriInterface
 
     /**
      * Scheme da uri, http ou https.
-     *
-     * @var string
      */
     private string $scheme;
 
     /**
      * Basicamente o domínio, mas pode ser um número como ip.
-     *
-     * @var string
      */
     private string $host;
 
     /**
      * Usuário para autenticação.
-     *
-     * @var string
      */
-    private ?string $user = null;
+    private string|null $user = null;
 
     /**
      * Senha para autenticação.
-     *
-     * @var string|null
      */
-    private ?string $pass = null;
+    private string|null $pass = null;
 
     /**
      * Porta.
-     *
-     * @var string|null
      */
-    private ?string $port = null;
+    private string|null $port = null;
 
     /**
      * Query string, o que vem depois do ?
-     *
-     * @var string
      */
     private string $query;
 
     /**
      * Fragment, o que vem depois do #.
-     *
-     * @var string
      */
     private string $fragment;
 
     /**
      * Caminho da uri, logo cochecido como o /alguma-coisa.
-     *
-     * @var string
      */
     private string $path;
 
     /**
      * Representação de uma uri.
-     *
-     * @param string $url
      */
     public function __construct(string $url)
     {
@@ -88,35 +70,65 @@ class Uri implements UriInterface
     }
 
     /**
-     * Retorna o scheme.
-     *
-     * @return string
+     * Retorna uma string com dados da uri.
      */
-    public function getScheme() : string
+    public function __toString(): string
+    {
+        $string = '';
+
+        if ($this->getScheme()) {
+            $string .= $this->getScheme() . ':';
+        }
+
+        if ($this->getAuthority()) {
+            $string .= '//' . $this->getAuthority();
+        }
+
+        if ($this->getPath()) {
+            $path = '';
+
+            if ($this->getAuthority()) {
+                $path = '/' . ltrim($this->getPath(), '/');
+            }
+
+            $string .= $path;
+        }
+
+        if ($this->getQuery()) {
+            $string .= '?' . $this->getQuery();
+        }
+
+        if ($this->getFragment()) {
+            $string .= '#' . $this->getFragment();
+        }
+
+        return $string;
+    }
+
+    /**
+     * Retorna o scheme.
+     */
+    public function getScheme(): string
     {
         return $this->scheme;
     }
 
     /**
      * Retorna o host.
-     *
-     * @return string
      */
-    public function getHost() : string
+    public function getHost(): string
     {
         return $this->host;
     }
 
     /**
      * Retorna o usuário e senha caso tenha username[:password].
-     *
-     * @return string
      */
-    public function getUserInfo() : string
+    public function getUserInfo(): string
     {
         $userinfo = $this->user;
 
-        if ($this->user && $this->pass != '') {
+        if ($this->user && $this->pass) {
             $userinfo .= ':' . $this->pass;
         }
 
@@ -125,50 +137,42 @@ class Uri implements UriInterface
 
     /**
      * Retorna a porta caso exista e não seja a padrão.
-     *
-     * @return null|int
      */
-    public function getPort() : null|int
+    public function getPort(): int|null
     {
         return $this->port;
     }
 
     /**
      * Retorna a query string.
-     *
-     * @return string
      */
-    public function getQuery() : string
+    public function getQuery(): string
     {
         return $this->query;
     }
 
     /**
      * Retorna o fragment.
-     *
-     * @return string
      */
-    public function getFragment() : string
+    public function getFragment(): string
     {
         return $this->fragment;
     }
 
     /**
      * Retorna a autoridade no formato: [user-info@]host[:port].
-     *
-     * @return string
      */
-    public function getAuthority() : string
+    public function getAuthority(): string
     {
         $authority = '';
 
-        if ($this->getUserInfo() != '') {
+        if ($this->getUserInfo()) {
             $authority = $this->getUserInfo() . '@';
         }
 
         $authority .= $this->getHost();
 
-        if ($this->getPort() != '') {
+        if ($this->getPort()) {
             $authority .= ':' . $this->getPort();
         }
 
@@ -177,10 +181,8 @@ class Uri implements UriInterface
 
     /**
      * Retorna o path.
-     *
-     * @return string
      */
-    public function getPath() : string
+    public function getPath(): string
     {
         return $this->path;
     }
@@ -188,19 +190,18 @@ class Uri implements UriInterface
     /**
      * Retorna uma nova instância com o scheme passado.
      *
-     * @param  string $scheme
-     * @return Uri
+     * @param string $scheme
      */
-    public function withScheme($scheme) : Uri
+    public function withScheme($scheme): Uri
     {
-        if (!is_string($scheme)) {
+        if (! is_string($scheme)) {
             throw new InvalidArgumentException('O scheme deve ser uma string');
         }
 
         $scheme        = strtolower($scheme);
         $clone         = clone $this;
 
-        if ($scheme !== null && $scheme !== '' && !in_array($scheme, array_keys(self::SCHEMES))) {
+        if ($scheme !== null && $scheme !== '' && ! in_array($scheme, array_keys(self::SCHEMES))) {
             throw new InvalidArgumentException('Scheme não inválido, os schemes suportados são: ' . join(', ', array_keys(self::SCHEMES)));
         }
 
@@ -212,17 +213,16 @@ class Uri implements UriInterface
     /**
      * Retorna uma nova instância com o user-info passado.
      *
-     * @param  string $user
-     * @param  string $password
-     * @return Uri
+     * @param string      $user
+     * @param string|null $password
      */
-    public function withUserInfo($user, $password = null) : Uri
+    public function withUserInfo($user, $password = null): Uri
     {
-        if (!is_string($user)) {
+        if (! is_string($user)) {
             throw new InvalidArgumentException('O usuário deve ser uma string');
         }
 
-        if ($password && !is_string($password)) {
+        if ($password && ! is_string($password)) {
             throw new InvalidArgumentException('A senha deve ser uma string');
         }
 
@@ -236,12 +236,11 @@ class Uri implements UriInterface
     /**
      * Retorna uma nova instância com o host passado.
      *
-     * @param  string $host
-     * @return Uri
+     * @param string $host
      */
-    public function withHost($host) : Uri
+    public function withHost($host): Uri
     {
-        if (!is_string($host)) {
+        if (! is_string($host)) {
             throw new InvalidArgumentException('Host deve ser uma string');
         }
 
@@ -254,10 +253,9 @@ class Uri implements UriInterface
     /**
      * Retorna uma nova instância com a porta passada.
      *
-     * @param  string|int $port
-     * @return Uri
+     * @param string|int $port
      */
-    public function withPort($port) : Uri
+    public function withPort($port): Uri
     {
         $port = $this->filterPort($port);
 
@@ -270,12 +268,11 @@ class Uri implements UriInterface
     /**
      * Retorna uma nova instância com o path passado.
      *
-     * @param  string $path
-     * @return Uri
+     * @param string $path
      */
-    public function withPath($path) : Uri
+    public function withPath($path): Uri
     {
-        if (!is_string($path)) {
+        if (! is_string($path)) {
             throw new InvalidArgumentException('Path deve ser uma string');
         }
 
@@ -288,12 +285,11 @@ class Uri implements UriInterface
     /**
      * Retorna uma nova instância com a query-string passada.
      *
-     * @param  string $query
-     * @return Uri
+     * @param string $query
      */
-    public function withQuery($query) : Uri
+    public function withQuery($query): Uri
     {
-        if (!is_string($query)) {
+        if (! is_string($query)) {
             throw new InvalidArgumentException('Query deve ser uma string');
         }
 
@@ -306,12 +302,11 @@ class Uri implements UriInterface
     /**
      * Retorna uma nova instância com o fragment passado.
      *
-     * @param  string $fragment
-     * @return Uri
+     * @param string $fragment
      */
-    public function withFragment($fragment) : Uri
+    public function withFragment($fragment): Uri
     {
-        if (!is_string($fragment)) {
+        if (! is_string($fragment)) {
             throw new InvalidArgumentException('Fragment deve ser uma string');
         }
 
@@ -322,52 +317,11 @@ class Uri implements UriInterface
     }
 
     /**
-     * Retorna uma string com dados da uri.
-     *
-     * @return string
-     */
-    public function __toString() : string
-    {
-        $string = '';
-
-        if ($this->getScheme() != null) {
-            $string .= $this->getScheme() . ':';
-        }
-
-        if ($this->getAuthority() != null) {
-            $string .= '//' . $this->getAuthority();
-        }
-
-        if ($this->getPath() != null) {
-            $path = '';
-
-            if ($this->getAuthority()) {
-                $path = '/' . ltrim($this->getPath(), '/');
-            }
-
-            $string .= $path;
-        }
-
-        if ($this->getQuery() != null) {
-            $string .= '?' . $this->getQuery();
-        }
-
-        if ($this->getFragment() != null) {
-            $string .= '#' . $this->getFragment();
-        }
-
-        return $string;
-    }
-
-    /**
      * Retorna uma porta filtrada e null caso seja a padrão.
-     *
-     * @param  string|int|null $port
-     * @return int|null
      */
-    private function filterPort(string|int|null $port) : ?int
+    private function filterPort(string|int|null $port): ?int
     {
-        if (null === $port) {
+        if (! $port) {
             return null;
         }
 
@@ -386,29 +340,22 @@ class Uri implements UriInterface
 
     /**
      * Retorna o path formatado pela RFC 3986.
-     *
-     * @param  string $path
-     * @return string
      */
-    private function filterPath(string $path) : string
+    private function filterPath(string $path): string
     {
         // está separado assim para que você possa interpretar de uma melhor forma
-        $regex = '/(?:' . '[^' . self::CHAR_UNRESERVED . self::CHAR_SUB_DELIMS . '\%\/\@' . ']+' . '|%(?![A-Fa-f0-9]{2})' . ')/';
+        $regex = '/(?:[^' . self::CHAR_UNRESERVED . self::CHAR_SUB_DELIMS . '\%\/\@]+|%(?![A-Fa-f0-9]{2}))/';
 
         return preg_replace_callback($regex, [$this, 'rawUrlEncode'], $path);
     }
 
     /**
      * Retorna a query stirng ou fragment formatado pela RFC 3986.
-     *
-     * @param  string $string
-     * @return string
      */
-    private function filterQueryAndFragment(string $string) : string
+    private function filterQueryAndFragment(string $string): string
     {
         $string = ltrim(ltrim($string, '?'), '#');
-        // está separado assim para que você possa interpretar de uma melhor forma
-        $regex = '/(?:' . '[^' . self::CHAR_UNRESERVED . self::CHAR_SUB_DELIMS . '\%\/\@\?' . ']+' . '|%(?![A-Fa-f0-9]{2})' . ')/';
+        $regex  = '/(?:[^' . self::CHAR_UNRESERVED . self::CHAR_SUB_DELIMS . '\%\/\@\?]+|%(?![A-Fa-f0-9]{2}))/';
 
         return preg_replace_callback($regex, [$this, 'rawUrlEncode'], $string);
     }
@@ -416,10 +363,9 @@ class Uri implements UriInterface
     /**
      * Formata os caracteres para se adequarem a RFC 3986.
      *
-     * @param  array $match
-     * @return void
+     * @param array<string> $match
      */
-    private function rawUrlEncode(array $match) : string
+    private function rawUrlEncode(array $match): string
     {
         return rawurlencode($match[0]);
     }

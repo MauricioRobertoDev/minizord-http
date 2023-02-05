@@ -3,7 +3,7 @@
 namespace Minizord\Http;
 
 use InvalidArgumentException;
-use Minizord\Http\Contract\ResponseInterface;
+use Psr\Http\Message\ResponseInterface;
 
 class Response implements ResponseInterface
 {
@@ -80,26 +80,18 @@ class Response implements ResponseInterface
 
     /**
      * Status code.
-     *
-     * @var int
      */
-    private $statusCode;
+    private int $statusCode;
 
     /**
      * Motivo http.
-     *
-     * @var string
      */
-    private $reasonPhrase;
+    private string $reasonPhrase;
 
     /**
      * Representação de uma resposta de saída do lado do servidor.
      *
-     * @param int    $status
-     * @param array  $headers
      * @param string $body
-     * @param string $version
-     * @param string $reason
      */
     public function __construct(
         int $status = 200,
@@ -115,7 +107,7 @@ class Response implements ResponseInterface
         $this->statusCode = $status;
         $this->setHeaders($headers);
 
-        if (!$reason && isset(self::HTTP_PHRASES[$this->statusCode])) {
+        if (! $reason && isset(self::HTTP_PHRASES[$this->statusCode])) {
             $reason = self::HTTP_PHRASES[$status];
         }
 
@@ -126,10 +118,8 @@ class Response implements ResponseInterface
 
     /**
      * Retorna o status code.
-     *
-     * @return int
      */
-    public function getStatusCode() : int
+    public function getStatusCode(): int
     {
         return $this->statusCode;
     }
@@ -137,13 +127,12 @@ class Response implements ResponseInterface
     /**
      * Retorna uma nova instância com o status code passado.
      *
-     * @param  int    $code
-     * @param  string $reasonPhrase
-     * @return self
+     * @param string|int $code
+     * @param string     $reasonPhrase
      */
-    public function withStatus($code, $reasonPhrase = '') : self
+    public function withStatus($code, $reasonPhrase = ''): self
     {
-        if (!is_int($code) && !is_string($code)) {
+        if (! is_int($code) && ! is_string($code)) {
             throw new InvalidArgumentException('O status code precisa ser um número inteiro');
         }
 
@@ -156,7 +145,7 @@ class Response implements ResponseInterface
         $clone             = clone $this;
         $clone->statusCode = $code;
 
-        if (!$reasonPhrase && isset(self::HTTP_PHRASES[$clone->statusCode])) {
+        if (! $reasonPhrase && isset(self::HTTP_PHRASES[$clone->statusCode])) {
             $reasonPhrase = self::HTTP_PHRASES[$clone->statusCode];
         }
 
@@ -167,10 +156,8 @@ class Response implements ResponseInterface
 
     /**
      * Retorna a reason phrase, motivo ex. OK, Not Found, Bad Request...
-     *
-     * @return string
      */
-    public function getReasonPhrase() : string
+    public function getReasonPhrase(): string
     {
         return $this->reasonPhrase;
     }

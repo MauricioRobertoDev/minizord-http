@@ -3,8 +3,7 @@
 namespace Minizord\Http;
 
 use InvalidArgumentException;
-use Psr\Http\Message\RequestInterface as PsrRequestInterface;
-use Psr\Http\Message\UriInterface as PsrUriInterface;
+use Psr\Http\Message\UriInterface;
 
 trait RequestTrait
 {
@@ -12,31 +11,23 @@ trait RequestTrait
 
     /**
      * Método http.
-     *
-     * @var string
      */
     private string $method = 'GET';
 
     /**
      * Destino da solicitação.
-     *
-     * @var string|null
      */
-    private ?string $requestTarget = null;
+    private string|null $requestTarget = null;
 
     /**
      * Uri da request.
-     *
-     * @var PsrUriInterface
      */
-    private PsrUriInterface $uri;
+    private UriInterface $uri;
 
     /**
      * Retorna o destino da solicitação.
-     *
-     * @return string
      */
-    public function getRequestTarget() : string
+    public function getRequestTarget(): string
     {
         if ($this->requestTarget !== null) {
             return $this->requestTarget;
@@ -55,12 +46,11 @@ trait RequestTrait
     /**
      * Retorna uma nova instância com o request-target passado.
      *
-     * @param  mixed               $requestTarget
-     * @return PsrRequestInterface
+     * @param string $requestTarget
      */
-    public function withRequestTarget($requestTarget) : self
+    public function withRequestTarget($requestTarget): self
     {
-        if (!is_string($requestTarget) || preg_match('/\s/', $requestTarget)) {
+        if (! is_string($requestTarget) || preg_match('/\s/', $requestTarget)) {
             throw new InvalidArgumentException('Request target não deve conter espaços');
         }
 
@@ -72,10 +62,8 @@ trait RequestTrait
 
     /**
      * Retorna o método http da request.
-     *
-     * @return void
      */
-    public function getMethod() : string
+    public function getMethod(): string
     {
         return $this->method;
     }
@@ -83,12 +71,11 @@ trait RequestTrait
     /**
      * Retorna uma nova instância com o método http passado.
      *
-     * @param  string              $method
-     * @return PsrRequestInterface
+     * @param string $method
      */
-    public function withMethod($method) : self
+    public function withMethod($method): self
     {
-        if (!is_string($method)) {
+        if (! is_string($method)) {
             throw new InvalidArgumentException('O método deve ser uma string');
         }
 
@@ -102,10 +89,8 @@ trait RequestTrait
 
     /**
      * Retorna a uri da request.
-     *
-     * @return PsrUriInterface
      */
-    public function getUri() : PsrUriInterface
+    public function getUri(): UriInterface
     {
         return $this->uri;
     }
@@ -113,11 +98,9 @@ trait RequestTrait
     /**
      * Retorna uma nova instância com a uri passada.
      *
-     * @param  PsrUriInterface     $uri
-     * @param  bool                $preserveHost
-     * @return PsrRequestInterface
+     * @param bool $preserveHost
      */
-    public function withUri(PsrUriInterface $uri, $preserveHost = false) : self
+    public function withUri(UriInterface $uri, $preserveHost = false): self
     {
         $clone      = clone $this;
         $clone->uri = $uri;
@@ -133,22 +116,12 @@ trait RequestTrait
     }
 
     /**
-     * Valida o método http.
-     *
-     * @param  string $method
-     * @return void
+     * Seta o host baseado no host da Uri.
      */
-    private function validateMethod(string $method) : void
-    {
-        if (!preg_match('/^[a-zA-Z]+$/', $method)) {
-            throw new InvalidArgumentException('O método deve ser uma string');
-        }
-    }
-
-    protected function setHostFromUri() : void
+    protected function setHostFromUri(): void
     {
         // nós não temos o host para preservar e nem a uri tem
-        if (!$this->uri->getHost()) {
+        if (! $this->uri->getHost()) {
             return;
         }
 
@@ -160,5 +133,15 @@ trait RequestTrait
         }
 
         $this->setHeaders(['Host' => $host]);
+    }
+
+    /**
+     * Valida o método http.
+     */
+    private function validateMethod(string $method): void
+    {
+        if (! preg_match('/^[a-zA-Z]+$/', $method)) {
+            throw new InvalidArgumentException('O método deve ser uma string');
+        }
     }
 }

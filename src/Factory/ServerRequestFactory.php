@@ -10,12 +10,10 @@ class ServerRequestFactory implements ServerRequestFactoryInterface
     /**
      * Crima uma ServerRequest.
      *
-     * @param  string              $method
-     * @param  UriInterface|string $uri
-     * @param  array               $serverParams
-     * @return ServerRequest
+     * @param UriInterface|string   $uri
+     * @param array<string, string> $serverParams
      */
-    public function createServerRequest(string $method, $uri, array $serverParams = []) : ServerRequest
+    public function createServerRequest(string $method, $uri, array $serverParams = []): ServerRequest
     {
         return new ServerRequest(method: $method, uri: $uri, serverParams: $serverParams);
     }

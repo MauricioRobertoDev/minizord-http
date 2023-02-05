@@ -4,22 +4,22 @@ use Minizord\Http\ServerRequest;
 use Minizord\Http\Stream;
 use Minizord\Http\UploadedFile;
 use Minizord\Http\Uri;
-use Psr\Http\Message\ServerRequestInterface as PsrServerRequestInterface;
-use Psr\Http\Message\UploadedFileInterface as PsrUploadedFileInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\UploadedFileInterface;
 
 /*
  * Instâncialização
  */
 test('Deve criar uma nova server request', function () {
     $request = new ServerRequest(headers: ['Host' => ['batata.com']]);
-    expect($request)->toBeInstanceOf(PsrServerRequestInterface::class);
+    expect($request)->toBeInstanceOf(ServerRequestInterface::class);
     expect($request->getHeader('host'))->toBe(['batata.com']);
     expect($request->getBody())->toBeInstanceOf(Stream::class);
     expect($request->getBody()->getContents())->toBe('');
     expect($request->getServerParams())->toBe([]);
 
     $request = new ServerRequest(body: 'batata');
-    expect($request)->toBeInstanceOf(PsrServerRequestInterface::class);
+    expect($request)->toBeInstanceOf(ServerRequestInterface::class);
     expect($request->getBody())->toBeInstanceOf(Stream::class);
     expect($request->getBody()->getContents())->toBe('batata');
     expect($request->getServerParams())->toBe([]);
@@ -28,7 +28,7 @@ test('Deve criar uma nova server request', function () {
     $resource         = fopen($tempFileName, 'rw+b');
     fwrite($resource, 'batatinha');
     $request = new ServerRequest(body: $resource);
-    expect($request)->toBeInstanceOf(PsrServerRequestInterface::class);
+    expect($request)->toBeInstanceOf(ServerRequestInterface::class);
     expect($request->getBody())->toBeInstanceOf(Stream::class);
     expect($request->getBody()->getContents())->toBe('batatinha');
     expect($request->getServerParams())->toBe([]);
@@ -125,8 +125,8 @@ test('Deve retornar uma nova instância com os arquivos de upload passados', fun
     $up1     = new UploadedFile('batata', 1024, UPLOAD_ERR_OK);
     $up2     = new UploadedFile('tomate', 1024, UPLOAD_ERR_OK);
 
-    expect($up1)->toBeInstanceOf(PsrUploadedFileInterface::class);
-    expect($up2)->toBeInstanceOf(PsrUploadedFileInterface::class);
+    expect($up1)->toBeInstanceOf(UploadedFileInterface::class);
+    expect($up2)->toBeInstanceOf(UploadedFileInterface::class);
 
     $ups = [$up1, $up2];
 
@@ -137,7 +137,7 @@ test('Deve retornar uma nova instância com os arquivos de upload passados', fun
     expect($request->withUploadedFiles($ups)->getUploadedFiles())->toBe($ups);
 });
 
-test('Deve estourar um erro ao passar algo que não seja um PsrUploadedFileInterface', function () {
+test('Deve estourar um erro ao passar algo que não seja um UploadedFileInterface', function () {
     $request = new ServerRequest();
 
     expect(fn () => $request->withUploadedFiles(['any_value']))->toThrow(InvalidArgumentException::class);

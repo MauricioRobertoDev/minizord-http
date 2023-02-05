@@ -1,8 +1,8 @@
 <?php
 
-use Minizord\Http\Contract\UploadedFileInterface;
 use Minizord\Http\Factory\UploadedFileFactory;
 use Minizord\Http\Stream;
+use Psr\Http\Message\UploadedFileInterface;
 
 test('Deve criar uma UploadedFile', function () {
     $factory          = new UploadedFileFactory();

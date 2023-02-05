@@ -3,9 +3,9 @@
 namespace Minizord\Http;
 
 use InvalidArgumentException;
-use Minizord\Http\Contract\ServerRequestInterface;
-use Psr\Http\Message\UploadedFileInterface as PsrUploadedFileInterface;
-use Psr\Http\Message\UriInterface as PsrUriInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\UploadedFileInterface;
+use Psr\Http\Message\UriInterface;
 
 class ServerRequest implements ServerRequestInterface
 {
@@ -15,50 +15,52 @@ class ServerRequest implements ServerRequestInterface
     /**
      * Atributos da request.
      *
-     * @var array
+     * @var array<string, string>
      */
     private array $attributes;
 
     /**
      * Server params tipicamente $_SERVER.
      *
-     * @var array
+     * @var array<string, string>
      */
     private array $serverParams  = [];
 
     /**
      * Cookie params tipicamente $_COOKIE.
      *
-     * @var array
+     * @var array<string, string>
      */
     private array $cookieParams  = [];
 
     /**
      * Query params tipicamente $_GET.
      *
-     * @var array
+     * @var array<string, string>
      */
     private array $queryParams   = [];
-    // UploadedFileInterface
+
     /**
      * Array arquivos upados.
      *
-     * @var PsrUploadedFileInterface[]
+     * @var array<UploadedFile>
      */
     private array $uploadedFiles          = [];
 
     /**
-     * @var null|array|object
+     * O corpo da requisilção já parseado.
      */
-    private null|array|object $parsedBody = null;
+    private object|array|null $parsedBody = null;
 
-    // Representação de uma solicitação HTTP recebida do lado do servidor.
+    /**
+     * Representação de uma solicitação HTTP recebida do lado do servidor.
+     */
     public function __construct(
         array $serverParams = [],
         array $uploadedFiles = [],
         array $cookieParams = [],
         array $queryParams = [],
-        PsrUriInterface|string $uri = '',
+        UriInterface|string $uri = '',
         array $headers = [],
         string $method =  'GET',
         mixed $body = null,
@@ -69,7 +71,7 @@ class ServerRequest implements ServerRequestInterface
         $this->validateProtocolVersion($version);
         $this->validateUploadedFiles($uploadedFiles);
 
-        if (!($uri instanceof PsrUriInterface)) {
+        if (! ($uri instanceof UriInterface)) {
             $uri = new Uri($uri);
         }
 
@@ -84,7 +86,7 @@ class ServerRequest implements ServerRequestInterface
 
         $this->setHeaders($headers);
 
-        if (!$this->hasHeader('Host')) {
+        if (! $this->hasHeader('Host')) {
             $this->setHostFromUri();
         }
 
@@ -93,7 +95,10 @@ class ServerRequest implements ServerRequestInterface
         }
     }
 
-    public function withCookieParams(array $cookies) : self
+    /**
+     * Retorna uma nova intância com os cookies passados.
+     */
+    public function withCookieParams(array $cookies): self
     {
         $clone               = clone $this;
         $clone->cookieParams = $cookies;
@@ -101,7 +106,10 @@ class ServerRequest implements ServerRequestInterface
         return $clone;
     }
 
-    public function withQueryParams(array $query) : self
+    /**
+     * Retorna uma nova intância com os query params passados.
+     */
+    public function withQueryParams(array $query): self
     {
         $clone              = clone $this;
         $clone->queryParams = $query;
@@ -109,7 +117,12 @@ class ServerRequest implements ServerRequestInterface
         return $clone;
     }
 
-    public function withUploadedFiles(array $uploadedFiles) : self
+    /**
+     * Retorna uma nova instância com os UploadedFiles passados.
+     *
+     * @param array<UploadedFile> $uploadedFiles
+     */
+    public function withUploadedFiles(array $uploadedFiles): self
     {
         $this->validateUploadedFiles($uploadedFiles);
 
@@ -119,9 +132,14 @@ class ServerRequest implements ServerRequestInterface
         return $clone;
     }
 
-    public function withParsedBody($data) : self
+    /**
+     * Retorna uma nova instância com o body já parseado passado.
+     *
+     * @param object|array|null $data
+     */
+    public function withParsedBody($data): self
     {
-        if (!is_array($data) && !is_object($data) && $data !== null) {
+        if (! is_array($data) && ! is_object($data) && $data !== null) {
             throw new InvalidArgumentException('Os dados devem ser um object, array ou null');
         }
 
@@ -131,7 +149,13 @@ class ServerRequest implements ServerRequestInterface
         return $clone;
     }
 
-    public function withAttribute($name, $value) : self
+    /**
+     * Retorna uma nova instância com o atributo passado.
+     *
+     * @param string $name
+     * @param string $value
+     */
+    public function withAttribute($name, $value): self
     {
         $clone                    = clone $this;
         $clone->attributes[$name] = $value;
@@ -139,7 +163,12 @@ class ServerRequest implements ServerRequestInterface
         return $clone;
     }
 
-    public function withoutAttribute($name) : self
+    /**
+     * Retorna uma nova intância sem o atributo passado.
+     *
+     * @param string $name
+     */
+    public function withoutAttribute($name): self
     {
         $clone = clone $this;
         unset($clone->attributes[$name]);
@@ -147,19 +176,34 @@ class ServerRequest implements ServerRequestInterface
         return $clone;
     }
 
-    public function getServerParams() : array
+    /**
+     * Retorna o server params.
+     *
+     * @return array<string, string>
+     */
+    public function getServerParams(): array
     {
         return $this->serverParams;
     }
 
-    public function getCookieParams() : array
+    /**
+     * Retorna o cookie params.
+     *
+     * @return array<string, string>
+     */
+    public function getCookieParams(): array
     {
         return $this->cookieParams;
     }
 
-    public function getQueryParams() : array
+    /**
+     * Retorna o query params.
+     *
+     * @return array<string, string>
+     */
+    public function getQueryParams(): array
     {
-        if (!empty($this->queryParams)) {
+        if ($this->queryParams !== []) {
             return $this->queryParams;
         }
 
@@ -170,12 +214,20 @@ class ServerRequest implements ServerRequestInterface
         return $queryParams;
     }
 
-    public function getUploadedFiles() : array
+    /**
+     * Returna os arquivos upados.
+     *
+     * @return array<string|int, UploadedFiles>
+     */
+    public function getUploadedFiles(): array
     {
         return $this->uploadedFiles;
     }
 
-    public function getParsedBody() : object|array|null
+    /**
+     * Returna o body já parseado.
+     */
+    public function getParsedBody(): object|array|null
     {
         if ($this->parsedBody !== null) {
             return $this->parsedBody;
@@ -192,21 +244,39 @@ class ServerRequest implements ServerRequestInterface
         return $this->parsedBody;
     }
 
-    public function getAttributes() : array
+    /**
+     * Retorna todos os atributos.
+     *
+     * @return array<string, string>
+     */
+    public function getAttributes(): array
     {
         return $this->attributes;
     }
 
-    public function getAttribute($name, $default = null) : mixed
+    /**
+     * Retorna um atributo específico.
+     *
+     * @param string      $name
+     * @param string|null $default
+     *
+     * @return string|null
+     */
+    public function getAttribute($name, $default = null): mixed
     {
         return $this->attributes[$name] ?? $default;
     }
 
-    private function validateUploadedFiles(array $uploadedFiles) : void
+    /**
+     * Vallida os arquivos upados.
+     *
+     * @param array<UploadedFile> $uploadedFiles
+     */
+    private function validateUploadedFiles(array $uploadedFiles): void
     {
         foreach ($uploadedFiles as $uploadedFile) {
-            if (!$uploadedFile instanceof PsrUploadedFileInterface) {
-                throw new InvalidArgumentException('O array só deve conter PsrUploadedFileInterface');
+            if (! $uploadedFile instanceof UploadedFileInterface) {
+                throw new InvalidArgumentException('O array só deve conter UploadedFileInterface');
             }
         }
     }

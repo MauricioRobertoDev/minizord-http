@@ -2,9 +2,9 @@
 
 namespace Minizord\Http;
 
-use Minizord\Http\Contract\RequestInterface;
-use Psr\Http\Message\StreamInterface as PsrStreamInterface;
-use Psr\Http\Message\UriInterface as PsrUriInterface;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\StreamInterface;
+use Psr\Http\Message\UriInterface;
 
 class Request implements RequestInterface
 {
@@ -14,15 +14,11 @@ class Request implements RequestInterface
     /**
      * Representação de uma solicitação de saída do lado do cliente.
      *
-     * @param string                             $method
-     * @param PsrUriInterface|string             $uri
-     * @param array                              $headers
-     * @param PsrStreamInterface|resource|string $body
-     * @param string                             $version
+     * @param StreamInterface|resource|string $body
      */
     public function __construct(
         string $method = 'GET',
-        PsrUriInterface|string $uri = '',
+        UriInterface|string $uri = '',
         array $headers = [],
         mixed $body = null,
         string $version = '1.1'
@@ -30,7 +26,7 @@ class Request implements RequestInterface
         $this->validateMethod($method);
         $this->validateProtocolVersion($version);
 
-        if (!($uri instanceof PsrUriInterface)) {
+        if (! ($uri instanceof UriInterface)) {
             $uri = new Uri($uri);
         }
 
@@ -40,7 +36,7 @@ class Request implements RequestInterface
 
         $this->setHeaders($headers);
 
-        if (!$this->hasHeader('Host')) {
+        if (! $this->hasHeader('Host')) {
             $this->setHostFromUri();
         }
 
