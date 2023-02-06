@@ -20,8 +20,9 @@ return (new PhpCsFixer\Config())
         'single_quote'                                => true,
         'binary_operator_spaces'                      => [
             'operators' => [
-                '=>' => 'align',
-                '='  => 'align',
+                '=>'   => 'align',
+                '='    => 'align',
+                '??='  => 'align',
             ],
         ],
         'blank_line_after_opening_tag'                => true,
@@ -86,12 +87,13 @@ return (new PhpCsFixer\Config())
         'phpdoc_single_line_var_spacing'              => true,
         'phpdoc_summary'                              => true,
         'phpdoc_to_comment'                           => true,
+        'phpdoc_separation'                           => true,
         'phpdoc_trim'                                 => true,
         'phpdoc_types'                                => true,
         'phpdoc_var_without_name'                     => true,
         'no_singleline_whitespace_before_semicolons'  => true,
         'no_trailing_whitespace'                      => true,
-        'return_type_declaration'                     => ['space_before' => 'one'],
+        'return_type_declaration'                     => ['space_before' => 'none'],
         'single_blank_line_before_namespace'          => true,
         'single_class_element_per_statement'          => true,
         'space_after_semicolon'                       => true,
@@ -101,6 +103,8 @@ return (new PhpCsFixer\Config())
         'unary_operator_spaces'                       => true,
         'whitespace_after_comma_in_array'             => true,
         'space_after_semicolon'                       => true,
+        'not_operator_with_successor_space'           => true,
+
     ])
     ->setFinder($finder)
     ->setLineEnding("\n");
