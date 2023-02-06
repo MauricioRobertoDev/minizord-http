@@ -1,6 +1,6 @@
 <div align="center">
 
-  <img src="minizord.png" alt="logo" width="150" height="auto" />
+  <img src="https://github.com/MauricioRobertoDev/minizord-template/blob/main/minizord.png" alt="logo" width="150" height="auto" />
   <h1>Minizord - Template</h1>
   
   <p>
