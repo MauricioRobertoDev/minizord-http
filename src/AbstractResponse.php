@@ -100,7 +100,7 @@ abstract class AbstractResponse extends AbstractMessage implements ResponseInter
      * @param string|int $code
      * @param string     $reasonPhrase
      */
-    public function withStatus($code, $reasonPhrase = ''): self
+    public function withStatus($code, $reasonPhrase = ''): static
     {
         if (! is_int($code) && ! is_string($code)) {
             throw new InvalidArgumentException('O status code precisa ser um número inteiro');

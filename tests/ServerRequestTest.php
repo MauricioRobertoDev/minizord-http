@@ -37,6 +37,18 @@ test('Deve criar uma nova server request', function () {
 /*
  * withCookieParams()
  */
+test('Deve criar uma nova instância com os server params passados', function () {
+    $request = new ServerRequest();
+
+    $serverParams = ['CONTENT_TYPE' => 'aplication/json'];
+
+    expect($request->withServerParams($serverParams))->not()->toBe($request);
+    expect($request->withServerParams($serverParams)->getServerParams())->toBe($serverParams);
+});
+
+/*
+ * withCookieParams()
+ */
 test('Deve criar uma nova instância com os cookies passados', function () {
     $request = new ServerRequest();
 

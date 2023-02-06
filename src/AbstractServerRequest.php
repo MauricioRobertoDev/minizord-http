@@ -52,7 +52,7 @@ abstract class AbstractServerRequest extends AbstractRequest implements ServerRe
     /**
      * Retorna uma nova intância com os cookies passados.
      */
-    public function withCookieParams(array $cookies): self
+    public function withCookieParams(array $cookies): static
     {
         $clone               = clone $this;
         $clone->cookieParams = $cookies;
@@ -63,10 +63,18 @@ abstract class AbstractServerRequest extends AbstractRequest implements ServerRe
     /**
      * Retorna uma nova intância com os query params passados.
      */
-    public function withQueryParams(array $query): self
+    public function withQueryParams(array $query): static
     {
         $clone              = clone $this;
         $clone->queryParams = $query;
+
+        return $clone;
+    }
+
+    public function withServerParams(array $server): static
+    {
+        $clone               = clone $this;
+        $clone->serverParams = $server;
 
         return $clone;
     }
@@ -76,7 +84,7 @@ abstract class AbstractServerRequest extends AbstractRequest implements ServerRe
      *
      * @param array<UploadedFile> $uploadedFiles
      */
-    public function withUploadedFiles(array $uploadedFiles): self
+    public function withUploadedFiles(array $uploadedFiles): static
     {
         $this->validateUploadedFiles($uploadedFiles);
 
@@ -91,7 +99,7 @@ abstract class AbstractServerRequest extends AbstractRequest implements ServerRe
      *
      * @param object|array|null $data
      */
-    public function withParsedBody($data): self
+    public function withParsedBody($data): static
     {
         if (! is_array($data) && ! is_object($data) && $data !== null) {
             throw new InvalidArgumentException('Os dados devem ser um object, array ou null');
@@ -109,7 +117,7 @@ abstract class AbstractServerRequest extends AbstractRequest implements ServerRe
      * @param string $name
      * @param string $value
      */
-    public function withAttribute($name, $value): self
+    public function withAttribute($name, $value): static
     {
         $clone                    = clone $this;
         $clone->attributes[$name] = $value;
@@ -122,7 +130,7 @@ abstract class AbstractServerRequest extends AbstractRequest implements ServerRe
      *
      * @param string $name
      */
-    public function withoutAttribute($name): self
+    public function withoutAttribute($name): static
     {
         $clone = clone $this;
         unset($clone->attributes[$name]);
@@ -242,8 +250,9 @@ abstract class AbstractServerRequest extends AbstractRequest implements ServerRe
         string $method =  'GET',
         UriInterface|string $uri = '',
         array $headers = [],
-        mixed $body = null,
         string $version = '1.1',
+        mixed $body = null,
+        object|array|null $parsedBody = null,
         array $serverParams = [],
         array $uploadedFiles = [],
         array $cookieParams = [],
@@ -257,7 +266,8 @@ abstract class AbstractServerRequest extends AbstractRequest implements ServerRe
         $this->cookieParams  = $cookieParams;
         $this->uploadedFiles = $uploadedFiles;
         $this->queryParams   = $queryParams;
+        $this->parsedBody    = $parsedBody;
 
-        parent::init($method, $uri, $headers, $body, $version);
+        parent::init($method, $uri, $headers, $version, $body, );
     }
 }

@@ -140,7 +140,7 @@ final class Uri implements UriInterface
      */
     public function getPort(): int|null
     {
-        return $this->port;
+        return $this->filterPort($this->port);
     }
 
     /**
@@ -331,7 +331,7 @@ final class Uri implements UriInterface
         }
 
         // é uma porta padrão
-        if (isset(self::SCHEMES[$this->scheme]) && self::SCHEMES[$this->scheme] === $port) {
+        if (! $this->scheme || (isset(self::SCHEMES[$this->scheme]) && self::SCHEMES[$this->scheme] === $port)) {
             return null;
         }
 

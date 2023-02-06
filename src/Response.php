@@ -18,6 +18,12 @@ final class Response extends AbstractResponse implements ResponseInterface
         string $version = '1.1',
         string $reason = ''
     ) {
-        $this->init($status, $headers, $body, $version, $reason);
+        $this->init(
+            status: $status,
+            headers: $headers,
+            body: $body,
+            version: $version,
+            reason: $reason
+        );
     }
 }

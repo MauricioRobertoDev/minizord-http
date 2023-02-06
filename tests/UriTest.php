@@ -93,7 +93,7 @@ test('Deve retornar o (port) da url correto', function () {
 
     $url = 'example:8888/';
     $uri = new Uri($url);
-    expect($uri->getPort())->toBe(8888);
+    expect($uri->getPort())->toBe(null);
 
     $url = 'example.com/';
     $uri = new Uri($url);
@@ -300,7 +300,7 @@ test('Deve retornar uma nova instância com o (port) passado', function () {
     expect($uri)->toBe($uri);
 
     expect($uri->withPort('any_string'))->not()->toBe($uri);
-    expect($uri->withPort('any_string')->getPort())->toBe(0);
+    expect($uri->withPort('any_string')->getPort())->toBe(null);
 
     expect($uri->withPort('80'))->not()->toBe($uri);
     expect($uri->withPort('80')->getPort())->toBe(null);

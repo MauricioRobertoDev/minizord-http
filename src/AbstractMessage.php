@@ -45,7 +45,7 @@ abstract class AbstractMessage implements MessageInterface
      *
      * @param string $version
      */
-    public function withProtocolVersion($version): self
+    public function withProtocolVersion($version): static
     {
         $this->validateProtocolVersion($version);
         $clone           = clone $this;
@@ -106,7 +106,7 @@ abstract class AbstractMessage implements MessageInterface
      * @param string               $name
      * @param string|array<string> $value
      */
-    public function withHeader($name, $value): self
+    public function withHeader($name, $value): static
     {
         if (! is_string($name)) {
             throw new InvalidArgumentException('Argumento 1 deve ser uma string');
@@ -122,13 +122,21 @@ abstract class AbstractMessage implements MessageInterface
         return $clone;
     }
 
+    public function withHeaders(array $headers): static
+    {
+        $clone = clone $this;
+        $clone->setHeaders($headers);
+
+        return $clone;
+    }
+
     /**
      * Retorna uma nova instância com os valores passados adicionado ao header existente.
      *
      * @param string               $name
      * @param string|array<string> $value
      */
-    public function withAddedHeader($name, $value): self
+    public function withAddedHeader($name, $value): static
     {
         if (! is_string($name)) {
             throw new InvalidArgumentException('Argumento 1 deve ser uma string');
@@ -149,7 +157,7 @@ abstract class AbstractMessage implements MessageInterface
      *
      * @param string $name
      */
-    public function withoutHeader($name): self
+    public function withoutHeader($name): static
     {
         $clone = clone $this;
         unset($clone->headers[$this->getOriginalHeaderName($name)], $clone->headerNames[strtolower($name)]);
@@ -172,7 +180,7 @@ abstract class AbstractMessage implements MessageInterface
     /**
      * Retorna uma nova instância com a stream passada.
      */
-    public function withBody(StreamInterface $body): self
+    public function withBody(StreamInterface $body): static
     {
         $clone         = clone $this;
         $clone->body   = $body;

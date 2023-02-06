@@ -29,7 +29,7 @@ test('Deve estourar um erro caso tente passar um protocol version inválido', fu
 /*
  * withHeader()
  */
-test('Deve retornar uma nova instância com os headers passados', function () {
+test('Deve retornar uma nova instância com o header passado', function () {
     $message = new class() extends AbstractMessage {
     };
 
@@ -65,6 +65,22 @@ test('Deve retornar uma nova instância com os valores dos headers substituidos'
 
     expect($message->withHeader('aNY_nAme', ['any_value_2'])->getHeader('any_name'))->toBe(['any_value_2']);
     expect($message->withoutHeader('aNY_nAme')->getHeader('any_name'))->toBe([]);
+});
+
+/*
+ * withHeaders()
+ */
+test('Deve retornar uma nova instância com os headers passados', function () {
+    $message = new class() extends AbstractMessage {
+    };
+
+    expect($message->getHeaders())->toBe([]);
+    expect($message->withHeaders(['any_name' => ['any_value']])->getHeader('any_name'))->toBe(['any_value']);
+    expect($message->withHeaders(['aNY_nAme' => ['any_value']])->getHeader('any_name'))->toBe(['any_value']);
+    expect($message->withHeaders(['aNY_nAme_2' => 'pplication/json'])->getHeaders())->toBe(['aNY_nAme_2' => ['pplication/json']]);
+    expect($message->withHeaders(['any_name_3' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.93 Safari/537.36'])->getHeaders())->toBe(['any_name_3' => ['Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.93 Safari/537.36']]);
+    expect($message->withHeaders(['name_1' => ['value_1'], 'name_2' => ['value_2']])->getHeader('name_1'))->toBe(['value_1']);
+    expect($message->withHeaders(['name_1' => ['value_1'], 'name_2' => ['value_2']])->getHeaders())->toBe(['name_1' => ['value_1'], 'name_2' => ['value_2']]);
 });
 
 /*

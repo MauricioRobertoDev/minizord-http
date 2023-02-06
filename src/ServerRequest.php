@@ -15,13 +15,26 @@ final class ServerRequest extends AbstractServerRequest implements ServerRequest
         array $uploadedFiles = [],
         array $cookieParams = [],
         array $queryParams = [],
+        string $method =  'GET',
+        string $version = '1.1',
         UriInterface|string $uri = '',
         array $headers = [],
-        string $method =  'GET',
         mixed $body = null,
-        string $version = '1.1',
+        object|array|null $parsedBody = null,
         array $attributes = [],
     ) {
-        $this->init($method, $uri, $headers, $body, $version, $serverParams, $uploadedFiles, $cookieParams, $queryParams, $attributes);
+        $this->init(
+            method: $method,
+            uri: $uri,
+            headers: $headers,
+            version: $version,
+            body: $body,
+            parsedBody: $parsedBody,
+            serverParams: $serverParams,
+            uploadedFiles: $uploadedFiles,
+            cookieParams: $cookieParams,
+            queryParams: $queryParams,
+            attributes: $attributes
+        );
     }
 }

@@ -20,6 +20,12 @@ final class Request extends AbstractRequest implements RequestInterface
         mixed $body = null,
         string $version = '1.1'
     ) {
-        $this->init($method, $uri, $headers, $body, $version);
+        $this->init(
+            method: $method,
+            uri: $uri,
+            headers: $headers,
+            version: $version,
+            body: $body,
+        );
     }
 }

@@ -47,7 +47,7 @@ abstract class AbstractRequest extends AbstractMessage implements RequestInterfa
      *
      * @param string $requestTarget
      */
-    public function withRequestTarget($requestTarget): self
+    public function withRequestTarget($requestTarget): static
     {
         if (! is_string($requestTarget) || preg_match('/\s/', $requestTarget)) {
             throw new InvalidArgumentException('Request target não deve conter espaços');
@@ -72,7 +72,7 @@ abstract class AbstractRequest extends AbstractMessage implements RequestInterfa
      *
      * @param string $method
      */
-    public function withMethod($method): self
+    public function withMethod($method): static
     {
         if (! is_string($method)) {
             throw new InvalidArgumentException('O método deve ser uma string');
@@ -99,7 +99,7 @@ abstract class AbstractRequest extends AbstractMessage implements RequestInterfa
      *
      * @param bool $preserveHost
      */
-    public function withUri(UriInterface $uri, $preserveHost = false): self
+    public function withUri(UriInterface $uri, $preserveHost = false): static
     {
         $clone      = clone $this;
         $clone->uri = $uri;
@@ -153,8 +153,8 @@ abstract class AbstractRequest extends AbstractMessage implements RequestInterfa
         string $method = 'GET',
         UriInterface|string $uri = '',
         array $headers = [],
+        string $version = '1.1',
         mixed $body = null,
-        string $version = '1.1'
     ): void {
         $this->validateMethod($method);
         $this->validateProtocolVersion($version);
