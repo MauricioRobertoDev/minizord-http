@@ -20,8 +20,9 @@ return (new PhpCsFixer\Config())
         'single_quote'                                => true,
         'binary_operator_spaces'                      => [
             'operators' => [
-                '=>' => 'align',
-                '='  => 'align',
+                '=>'   => 'align',
+                '='    => 'align',
+                '??='  => 'align',
             ],
         ],
         'blank_line_after_opening_tag'                => true,
@@ -103,6 +104,7 @@ return (new PhpCsFixer\Config())
         'whitespace_after_comma_in_array'             => true,
         'space_after_semicolon'                       => true,
         'not_operator_with_successor_space'           => true,
+
     ])
     ->setFinder($finder)
     ->setLineEnding("\n");
