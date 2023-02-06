@@ -176,3 +176,6 @@ Porem com pesquisa o que entendi é ser proposital, há várias RFC que ainda n�
  - [PHP - Lista de erros ao upar um arquivo](https://www.php.net/manual/en/features.file-upload.errors.php)
  - [PHP - Diferença entre 1 arquivo e vários enviados](https://www.php.net/manual/en/reserved.variables.files)
  - [PHP - Dicas para tratar o $_FILES](https://www.php.net/manual/en/features.file-upload.php)
+ - [PHP - Variáveis do $_SERVER](https://www.php.net/manual/en/reserved.variables.server)
+ - [PHP - Dicas de como pegar todos os header](https://www.php.net/manual/en/function.getallheaders.php)
+ - [Diego Brocanelli - Como realizar parse da query string](https://www.diegobrocanelli.com.br/php/realizar-parse-da-query-string-de-forma-simples/)
