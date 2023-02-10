@@ -33,7 +33,7 @@
 <h4>
     <a href="https://github.com/MauricioRobertoDev/minizord-http#zap-como-usar">Exemplos</a>
   <span> · </span>
-    <a href="https://github.com/MauricioRobertoDev/minizord-http">Documentação</a>
+    <a href="https://mauriciorobertodev.github.io/minizord-http/">Documentação</a>
   <span> · </span>
     <a href="https://github.com/MauricioRobertoDev/minizord-http/issues/">Reporte Bugs</a>
   <span>
