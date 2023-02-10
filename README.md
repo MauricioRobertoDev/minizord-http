@@ -10,32 +10,32 @@
   
 <!-- Badges -->
 <p>
-  <a href="https://github.com/MauricioRobertoDev/minizord-template/graphs/contributors">
-    <img src="https://img.shields.io/github/contributors/MauricioRobertoDev/minizord-template" alt="contributors" />
+  <a href="https://github.com/MauricioRobertoDev/minizord-http/graphs/contributors">
+    <img src="https://img.shields.io/github/contributors/MauricioRobertoDev/minizord-http" alt="contributors" />
   </a>
   <a href="">
-    <img src="https://img.shields.io/github/last-commit/MauricioRobertoDev/minizord-template" alt="last update" />
+    <img src="https://img.shields.io/github/last-commit/MauricioRobertoDev/minizord-http" alt="last update" />
   </a>
-  <a href="https://github.com/MauricioRobertoDev/minizord-template/network/members">
-    <img src="https://img.shields.io/github/forks/MauricioRobertoDev/minizord-template" alt="forks" />
+  <a href="https://github.com/MauricioRobertoDev/minizord-http/network/members">
+    <img src="https://img.shields.io/github/forks/MauricioRobertoDev/minizord-http" alt="forks" />
   </a>
-  <a href="https://github.com/MauricioRobertoDev/minizord-template/stargazers">
-    <img src="https://img.shields.io/github/stars/MauricioRobertoDev/minizord-template" alt="stars" />
+  <a href="https://github.com/MauricioRobertoDev/minizord-http/stargazers">
+    <img src="https://img.shields.io/github/stars/MauricioRobertoDev/minizord-http" alt="stars" />
   </a>
-  <a href="https://github.com/MauricioRobertoDev/minizord-template/issues/">
-    <img src="https://img.shields.io/github/issues/MauricioRobertoDev/minizord-template" alt="open issues" />
+  <a href="https://github.com/MauricioRobertoDev/minizord-http/issues/">
+    <img src="https://img.shields.io/github/issues/MauricioRobertoDev/minizord-http" alt="open issues" />
   </a>
-  <a href="https://github.com/MauricioRobertoDev/minizord-template/blob/master/LICENSE">
-    <img src="https://img.shields.io/github/license/MauricioRobertoDev/minizord-template.svg" alt="license" />
+  <a href="https://github.com/MauricioRobertoDev/minizord-http/blob/master/LICENSE">
+    <img src="https://img.shields.io/github/license/MauricioRobertoDev/minizord-http.svg" alt="license" />
   </a>
 </p>
    
 <h4>
-    <a href="https://github.com/MauricioRobertoDev/minizord-template/">Exemplo</a>
+    <a href="https://github.com/MauricioRobertoDev/minizord-http#zap-como-usar">Exemplos</a>
   <span> · </span>
-    <a href="https://github.com/MauricioRobertoDev/minizord-template">Documentação</a>
+    <a href="https://github.com/MauricioRobertoDev/minizord-http">Documentação</a>
   <span> · </span>
-    <a href="https://github.com/MauricioRobertoDev/minizord-template/issues/">Reporte Bugs</a>
+    <a href="https://github.com/MauricioRobertoDev/minizord-http/issues/">Reporte Bugs</a>
   <span>
 </div>
 
@@ -43,14 +43,27 @@
 
 <!-- About the Project -->
 ## :star2: Sobre o projeto
-Esse pacote tem o objetivo de...
+O objetivo é aprender.
+
+Esse pacote é uma implementação PSR-7 e PSR-17, uma série de classes que tem o papel de representar entidades básicas de uma requisição http, como por exemplo a Uri, a Stream e até mesmo a própria Request.
+
+Esse pacote é quase como a espinha dorsal de qualquer framework php, por lhe proporcionar várias classes de fácil manipulação, podendo escalar sua aplicação fácilmente.
+
+Veja mais nas minhas observações no final deste read-me.
 
 <!-- Features -->
 ### :dart: Features
 
-- Feature 1
-- Feature 2
-- Feature 3
+- Classe representando a uri (Uri)
+- Classe representando um stream de recurso (Stream)
+- Classe representando um arquivo upado (UploadedFile)
+- Classe representando uma requisição (Request)
+- Classe representando uma resposta (Response)
+- Request abstrata podendo ser extendida e criar sua própria
+- Factories para criação das classes
+- Método para criar uma ServerRequest atráves das variáveis globais
+- Método para popular sua classe através das variáveis globais
+- Método para criar várias UploadedFiles através da variável global $_FILES
 
 
 <br>
@@ -66,18 +79,46 @@ Esse pacote tem o objetivo de...
 <!-- Installation -->
 ### :gear: Instalação
 
-Instale o pacote {nome-do-pacote} com composer
+Instale o pacote minizord/http com composer
 
 ```bash
-  composer require {nome-do-pacote}
+  composer require minizord/http
 ```
 
 <!-- Examples -->
 ### :rocket: Exemplos
-Explicação de como usar o componente.
+Explicação de como usar, para saber mais detalhes veja a documentação.
 
 ```php
-exemplos aqui
+use Minizord\Http\Factory\RequestFactory;
+use Minizord\Http\Factory\ResponseFactory;
+use Minizord\Http\Factory\ServerRequestFactory;
+use Minizord\Http\Factory\StreamFactory;
+use Minizord\Http\Factory\UploadedFileFactory;
+use Minizord\Http\Factory\UriFactory;
+
+$uriFactory = new UriFactory();
+$streamFactory = new StreamFactory();
+$requestFactory = new RequestFactory();
+$responseFactory = new ResponseFactory();
+$uploadedFactory = new UploadedFileFactory();
+$serverRequestFactory = new ServerRequestFactory();
+
+$uri = $uriFactory->createUri('https://example.com.br/path/?arg=value');
+
+$stream = $streamFactory->createStream('content');
+$stream = $streamFactory->createStreamFromFile('path/to/file.txt', 'w+');
+$stream = $streamFactory->createStreamFromResource(fopen('path/to/file.txt', 'w+'));
+
+$request = $requestFactory->createRequest('POST', $uri);
+
+$response = $responseFactory->createResponse(400, 'Bad Request');
+
+$uploadedFile = $uploadedFactory->createUploadedFile($stream, 1024, UPLOAD_ERR_OK, 'file.txt', 'text/plain');
+$uploadedFiles = $uploadedFactory->createUploadedFilesFromGlobal(); // $_FILES;
+
+$serverRequest = $serverRequestFactory->createServerRequest('POST', $uri, []);
+$serverRequest = $serverRequestFactory->createFromGlobals(); // $_SERVER, $_GET, $_POST, $_COOKIE, $_FILES
 ```
 
 <br/>
@@ -88,13 +129,13 @@ exemplos aqui
 Clone o projeto
 
 ```bash
-  git clone https://github.com/MauricioRobertoDev/{nome-do-pacote}.git
+  git clone https://github.com/MauricioRobertoDev/minizord-http
 ```
 
 Entre na pasta do projeto
 
 ```bash
-  cd {nome-do-pacote}
+  cd minizord-http
 ```
 
 Instale as dependências
@@ -115,10 +156,10 @@ Para rodar os testes use o comando baixo
 <br>
 
 <!-- Contributing -->
-## :wave: Contribuindo
+## :wave: Contribuintes
 
-<a href="https://github.com/MauricioRobertoDev/minizord-template/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=MauricioRobertoDev/minizord-template" />
+<a href="https://github.com/MauricioRobertoDev/minizord-http/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=MauricioRobertoDev/minizord-http" />
 </a>
 
 Contribuições são sempre bem vindas!
@@ -130,7 +171,7 @@ Contribuições são sempre bem vindas!
 <!-- License -->
 ## :lock: License
 
-Licença MIT (MIT). Consulte o [arquivo de licença](https://github.com/MauricioRobertoDev/minizord-template/LICENSE) para obter mais informações.
+Licença MIT (MIT). Consulte o [arquivo de licença](https://github.com/MauricioRobertoDev/minizord-http/LICENSE) para obter mais informações.
 
 <br>
 
@@ -139,7 +180,7 @@ Licença MIT (MIT). Consulte o [arquivo de licença](https://github.com/Mauricio
 
 Mauricio Roberto - mauricio.roberto.dev@gmail.com
 
-Link do projeto: [https://github.com/MauricioRobertoDev/minizord-template](https://github.com/MauricioRobertoDev/minizord-template)
+Link do projeto: [https://github.com/MauricioRobertoDev/minizord-http](https://github.com/MauricioRobertoDev/minizord-http)
 
 <br>
 
