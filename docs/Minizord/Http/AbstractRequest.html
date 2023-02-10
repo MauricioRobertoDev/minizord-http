@@ -1,0 +1,1557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="robots" content="index, follow, all" />
+    <title>Minizord\Http\AbstractRequest | Minizord - Http</title>
+
+            <link rel="stylesheet" type="text/css" href="../../css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="../../css/bootstrap-theme.min.css">
+        <link rel="stylesheet" type="text/css" href="../../css/doctum.css">
+        <link rel="stylesheet" type="text/css" href="../../fonts/doctum-font.css">
+        <script src="../../js/jquery-3.5.1.slim.min.js"></script>
+        <script async defer src="../../doctum.js"></script>
+        <script async defer src="../../js/bootstrap.min.js"></script>
+        <script async defer src="../../js/autocomplete.min.js"></script>
+        <meta name="MobileOptimized" content="width">
+        <meta name="HandheldFriendly" content="true">
+        <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+
+    </head>
+
+    <body id="class" data-name="class:Minizord_Http_AbstractRequest" data-root-path="../../" data-search-index-url="../../doctum-search.json">
+            <div id="content">
+        <div id="left-column">
+                <div id="control-panel">
+                <div class="search-bar hidden" id="search-progress-bar-container">
+            <div class="progress">
+                <div class="progress-bar" role="progressbar" id="search-progress-bar"
+                    aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div>
+            </div>
+        </div>
+        <form id="search-form" action="../../search.html">
+            <span class="icon icon-search"></span>
+            <input name="search"
+                   id="doctum-search-auto-complete"
+                   class="typeahead form-control"
+                   type="search"
+                   placeholder="Search"
+                   spellcheck="false"
+                   autocorrect="off"
+                   autocomplete="off"
+                   autocapitalize="off">
+            <div class="auto-complete-results" id="auto-complete-results"></div>
+        </form>
+    </div>
+
+                <div id="api-tree"></div>
+
+        </div>
+        <div id="right-column">
+                <nav id="site-nav" class="navbar navbar-default" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-elements">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="../../index.html">Minizord - Http</a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar-elements">
+                <ul class="nav navbar-nav">
+                    <li><a href="../../classes.html">Classes</a></li>
+                    <li><a href="../../namespaces.html">Namespaces</a></li>
+                    <li><a href="../../interfaces.html">Interfaces</a></li>
+                    <li><a href="../../traits.html">Traits</a></li>
+                    <li><a href="../../doc-index.html">Index</a></li>
+                    <li><a href="../../search.html">Search</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+                        <div class="namespace-breadcrumbs">
+            <ol class="breadcrumb">
+                <li><span class="label label-default">class</span></li>
+                        <li><a href="../../Minizord.html">Minizord</a></li><li class="backslash">\</li><li><a href="../../Minizord/Http.html">Http</a></li><li class="backslash">\</li><li>AbstractRequest</li>
+            </ol>
+        </div>
+                <div id="page-content">
+    <div class="page-header">
+        <h1>AbstractRequest    
+            </h1>
+    </div>
+
+    
+    <p>    abstract     class
+    <strong>AbstractRequest</strong>        extends <a href="../../Minizord/Http/AbstractMessage.html"><abbr title="Minizord\Http\AbstractMessage">AbstractMessage</abbr></a>        implements        <abbr title="Psr\Http\Message\RequestInterface">RequestInterface</abbr>
+</p>
+
+        
+    
+        
+
+            
+        
+    
+            <h2>Properties</h2>
+
+            <table class="table table-condensed">
+                    <tr>
+                <td class="type" id="property_protocol">
+                                        protected                                        
+                                                                                
+                                    </td>
+                <td>$protocol</td>
+                <td class="last"><p>Versão do protocolo.</p></td>
+                <td><small>from&nbsp;<a href="../../Minizord/Http/AbstractMessage.html#property_protocol">
+<abbr title="Minizord\Http\AbstractMessage">AbstractMessage</abbr></a></small></td>
+            </tr>
+                    <tr>
+                <td class="type" id="property_headers">
+                                        protected                                        <abbr title="Minizord\Http\array&lt;string,string&gt;">array&lt;string,string&gt;</abbr>
+                                                                                
+                                    </td>
+                <td>$headers</td>
+                <td class="last"><p>Headers e seus valores.</p></td>
+                <td><small>from&nbsp;<a href="../../Minizord/Http/AbstractMessage.html#property_headers">
+<abbr title="Minizord\Http\AbstractMessage">AbstractMessage</abbr></a></small></td>
+            </tr>
+                    <tr>
+                <td class="type" id="property_headerNames">
+                                        protected                                        <abbr title="Minizord\Http\array&lt;string,string&gt;">array&lt;string,string&gt;</abbr>
+                                                                                
+                                    </td>
+                <td>$headerNames</td>
+                <td class="last"><p>Nome do header normalizado e o seu original.</p></td>
+                <td><small>from&nbsp;<a href="../../Minizord/Http/AbstractMessage.html#property_headerNames">
+<abbr title="Minizord\Http\AbstractMessage">AbstractMessage</abbr></a></small></td>
+            </tr>
+                    <tr>
+                <td class="type" id="property_body">
+                                        protected                                        
+                                                                                
+                                    </td>
+                <td>$body</td>
+                <td class="last"><p>O corpo da requisição uma stream.</p></td>
+                <td><small>from&nbsp;<a href="../../Minizord/Http/AbstractMessage.html#property_body">
+<abbr title="Minizord\Http\AbstractMessage">AbstractMessage</abbr></a></small></td>
+            </tr>
+                    <tr>
+                <td class="type" id="property_method">
+                                        protected                                        
+                                                                                
+                                    </td>
+                <td>$method</td>
+                <td class="last"><p>Método http.</p></td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td class="type" id="property_requestTarget">
+                                        protected                                        
+                                                                                
+                                    </td>
+                <td>$requestTarget</td>
+                <td class="last"><p>Destino da solicitação.</p></td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td class="type" id="property_uri">
+                                        protected                                        
+                                                                                
+                                    </td>
+                <td>$uri</td>
+                <td class="last"><p>Uri da request.</p></td>
+                <td></td>
+            </tr>
+            </table>
+
+    
+            <h2>Methods</h2>
+
+            <div class="container-fluid underlined">
+                    <div class="row">
+                <div class="col-md-2 type">
+                    string
+                </div>
+                <div class="col-md-8">
+                    <a href="#method_getProtocolVersion">getProtocolVersion</a>()
+        
+                                            <p><p>Retorna o a versão do protoloco ex. 1.1 1.0.</p></p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../Minizord/Http/AbstractMessage.html#method_getProtocolVersion">
+<abbr title="Minizord\Http\AbstractMessage">AbstractMessage</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    <a href="../../Minizord/Http/AbstractMessage.html"><abbr title="Minizord\Http\AbstractMessage">AbstractMessage</abbr></a>
+                </div>
+                <div class="col-md-8">
+                    <a href="#method_withProtocolVersion">withProtocolVersion</a>(string $version)
+        
+                                            <p><p>Retorna uma nova instância com a versão do protocolo passado.</p></p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../Minizord/Http/AbstractMessage.html#method_withProtocolVersion">
+<abbr title="Minizord\Http\AbstractMessage">AbstractMessage</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    array
+                </div>
+                <div class="col-md-8">
+                    <a href="#method_getHeaders">getHeaders</a>()
+        
+                                            <p><p>Retornar os headers.</p></p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../Minizord/Http/AbstractMessage.html#method_getHeaders">
+<abbr title="Minizord\Http\AbstractMessage">AbstractMessage</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    bool
+                </div>
+                <div class="col-md-8">
+                    <a href="#method_hasHeader">hasHeader</a>(string $name)
+        
+                                            <p><p>Checa se um header existe ou não.</p></p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../Minizord/Http/AbstractMessage.html#method_hasHeader">
+<abbr title="Minizord\Http\AbstractMessage">AbstractMessage</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    array
+                </div>
+                <div class="col-md-8">
+                    <a href="#method_getHeader">getHeader</a>(string $name)
+        
+                                            <p><p>Pega os valores de determinado header.</p></p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../Minizord/Http/AbstractMessage.html#method_getHeader">
+<abbr title="Minizord\Http\AbstractMessage">AbstractMessage</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    string
+                </div>
+                <div class="col-md-8">
+                    <a href="#method_getHeaderLine">getHeaderLine</a>(string $name)
+        
+                                            <p><p>Retorna os valores de determinado header em uma string.</p></p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../Minizord/Http/AbstractMessage.html#method_getHeaderLine">
+<abbr title="Minizord\Http\AbstractMessage">AbstractMessage</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    <a href="../../Minizord/Http/AbstractMessage.html"><abbr title="Minizord\Http\AbstractMessage">AbstractMessage</abbr></a>
+                </div>
+                <div class="col-md-8">
+                    <a href="#method_withHeader">withHeader</a>(string $name, string|string[] $value)
+        
+                                            <p><p>Retorna uma nova instância com o header passado.</p></p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../Minizord/Http/AbstractMessage.html#method_withHeader">
+<abbr title="Minizord\Http\AbstractMessage">AbstractMessage</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    <a href="../../Minizord/Http/AbstractMessage.html"><abbr title="Minizord\Http\AbstractMessage">AbstractMessage</abbr></a>
+                </div>
+                <div class="col-md-8">
+                    <a href="#method_withHeaders">withHeaders</a>(array $headers)
+        
+                                            <p class="no-description">No description</p>
+                                    </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../Minizord/Http/AbstractMessage.html#method_withHeaders">
+<abbr title="Minizord\Http\AbstractMessage">AbstractMessage</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    <a href="../../Minizord/Http/AbstractMessage.html"><abbr title="Minizord\Http\AbstractMessage">AbstractMessage</abbr></a>
+                </div>
+                <div class="col-md-8">
+                    <a href="#method_withAddedHeader">withAddedHeader</a>(string $name, string|string[] $value)
+        
+                                            <p><p>Retorna uma nova instância com os valores passados adicionado ao header existente.</p></p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../Minizord/Http/AbstractMessage.html#method_withAddedHeader">
+<abbr title="Minizord\Http\AbstractMessage">AbstractMessage</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    <a href="../../Minizord/Http/AbstractMessage.html"><abbr title="Minizord\Http\AbstractMessage">AbstractMessage</abbr></a>
+                </div>
+                <div class="col-md-8">
+                    <a href="#method_withoutHeader">withoutHeader</a>(string $name)
+        
+                                            <p><p>Retorna uma nova instância sem o header passado.</p></p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../Minizord/Http/AbstractMessage.html#method_withoutHeader">
+<abbr title="Minizord\Http\AbstractMessage">AbstractMessage</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    <abbr title="Psr\Http\Message\StreamInterface">StreamInterface</abbr>
+                </div>
+                <div class="col-md-8">
+                    <a href="#method_getBody">getBody</a>()
+        
+                                            <p><p>Retorna a stream atual, ou uma nova caso não exista.</p></p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../Minizord/Http/AbstractMessage.html#method_getBody">
+<abbr title="Minizord\Http\AbstractMessage">AbstractMessage</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    <a href="../../Minizord/Http/AbstractMessage.html"><abbr title="Minizord\Http\AbstractMessage">AbstractMessage</abbr></a>
+                </div>
+                <div class="col-md-8">
+                    <a href="#method_withBody">withBody</a>(<abbr title="Psr\Http\Message\StreamInterface">StreamInterface</abbr> $body)
+        
+                                            <p><p>Retorna uma nova instância com a stream passada.</p></p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../Minizord/Http/AbstractMessage.html#method_withBody">
+<abbr title="Minizord\Http\AbstractMessage">AbstractMessage</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    bool
+                </div>
+                <div class="col-md-8">
+                    <a href="#method_inHeader">inHeader</a>(string $name, <abbr title="Minizord\Http\string|array">string|array</abbr> $values)
+        
+                                            <p><p>Retorna o header tem todos os valores passados.</p></p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../Minizord/Http/AbstractMessage.html#method_inHeader">
+<abbr title="Minizord\Http\AbstractMessage">AbstractMessage</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    bool
+                </div>
+                <div class="col-md-8">
+                    <a href="#method_inHeaderAny">inHeaderAny</a>(string $name, array $values)
+        
+                                            <p><p>Retorna de o header algum dos valores passados.</p></p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../Minizord/Http/AbstractMessage.html#method_inHeaderAny">
+<abbr title="Minizord\Http\AbstractMessage">AbstractMessage</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    void
+                </div>
+                <div class="col-md-8">
+                    <a href="#method_validateProtocolVersion">validateProtocolVersion</a>(string $version)
+        
+                                            <p><p>Valida a versão do protocolo.</p></p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../Minizord/Http/AbstractMessage.html#method_validateProtocolVersion">
+<abbr title="Minizord\Http\AbstractMessage">AbstractMessage</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    <abbr title="Minizord\Http\string|null">string|null</abbr>
+                </div>
+                <div class="col-md-8">
+                    <a href="#method_getOriginalHeaderName">getOriginalHeaderName</a>(string $name)
+        
+                                            <p><p>Retorna o nome original do header.</p></p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../Minizord/Http/AbstractMessage.html#method_getOriginalHeaderName">
+<abbr title="Minizord\Http\AbstractMessage">AbstractMessage</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    void
+                </div>
+                <div class="col-md-8">
+                    <a href="#method_setHeaders">setHeaders</a>(array $headers, bool $merge = false)
+        
+                                            <p><p>Adiciona vários headers ou apenas os valores caso já exista.</p></p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../Minizord/Http/AbstractMessage.html#method_setHeaders">
+<abbr title="Minizord\Http\AbstractMessage">AbstractMessage</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    string
+                </div>
+                <div class="col-md-8">
+                    <a href="#method_getRequestTarget">getRequestTarget</a>()
+        
+                                            <p><p>Retorna o destino da solicitação.</p></p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    <a href="../../Minizord/Http/AbstractRequest.html"><abbr title="Minizord\Http\AbstractRequest">AbstractRequest</abbr></a>
+                </div>
+                <div class="col-md-8">
+                    <a href="#method_withRequestTarget">withRequestTarget</a>(string $requestTarget)
+        
+                                            <p><p>Retorna uma nova instância com o request-target passado.</p></p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    string
+                </div>
+                <div class="col-md-8">
+                    <a href="#method_getMethod">getMethod</a>()
+        
+                                            <p><p>Retorna o método http da request.</p></p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    <a href="../../Minizord/Http/AbstractRequest.html"><abbr title="Minizord\Http\AbstractRequest">AbstractRequest</abbr></a>
+                </div>
+                <div class="col-md-8">
+                    <a href="#method_withMethod">withMethod</a>(string $method)
+        
+                                            <p><p>Retorna uma nova instância com o método http passado.</p></p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    <abbr title="Psr\Http\Message\UriInterface">UriInterface</abbr>
+                </div>
+                <div class="col-md-8">
+                    <a href="#method_getUri">getUri</a>()
+        
+                                            <p><p>Retorna a uri da request.</p></p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    <a href="../../Minizord/Http/AbstractRequest.html"><abbr title="Minizord\Http\AbstractRequest">AbstractRequest</abbr></a>
+                </div>
+                <div class="col-md-8">
+                    <a href="#method_withUri">withUri</a>(<abbr title="Psr\Http\Message\UriInterface">UriInterface</abbr> $uri, bool $preserveHost = false)
+        
+                                            <p><p>Retorna uma nova instância com a uri passada.</p></p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    void
+                </div>
+                <div class="col-md-8">
+                    <a href="#method_setHostFromUri">setHostFromUri</a>()
+        
+                                            <p><p>Seta o host baseado no host da Uri.</p></p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    void
+                </div>
+                <div class="col-md-8">
+                    <a href="#method_validateMethod">validateMethod</a>(string $method)
+        
+                                            <p><p>Valida o método http.</p></p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    void
+                </div>
+                <div class="col-md-8">
+                    <a href="#method_init">init</a>(string $method = &#039;GET&#039;, <abbr title="Minizord\Http\Psr\Http\Message\UriInterface|string">UriInterface|string</abbr> $uri = &#039;&#039;, array $headers = [], string $version = &#039;1.1&#039;, mixed $body = null)
+        
+                                            <p><p>Configura os dados na request.</p></p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+            </div>
+
+
+        <h2>Details</h2>
+
+            <div id="method-details">
+                    <div class="method-item">
+                    <h3 id="method_getProtocolVersion">
+        <div class="location">in <a href="../../Minizord/Http/AbstractMessage.html#method_getProtocolVersion">
+<abbr title="Minizord\Http\AbstractMessage">AbstractMessage</abbr></a> at line 38</div>
+        <code>                    string
+    <strong>getProtocolVersion</strong>()
+        </code>
+    </h3>
+    <div class="details">    
+    
+            
+
+        <div class="method-description">
+                            <p><p>Retorna o a versão do protoloco ex. 1.1 1.0.</p></p>                        
+        </div>
+        <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>string</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_withProtocolVersion">
+        <div class="location">in <a href="../../Minizord/Http/AbstractMessage.html#method_withProtocolVersion">
+<abbr title="Minizord\Http\AbstractMessage">AbstractMessage</abbr></a> at line 48</div>
+        <code>                    <a href="../../Minizord/Http/AbstractMessage.html"><abbr title="Minizord\Http\AbstractMessage">AbstractMessage</abbr></a>
+    <strong>withProtocolVersion</strong>(string $version)
+        </code>
+    </h3>
+    <div class="details">    
+    
+            
+
+        <div class="method-description">
+                            <p><p>Retorna uma nova instância com a versão do protocolo passado.</p></p>                        
+        </div>
+        <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>string</td>
+                <td>$version</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td><a href="../../Minizord/Http/AbstractMessage.html"><abbr title="Minizord\Http\AbstractMessage">AbstractMessage</abbr></a></td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_getHeaders">
+        <div class="location">in <a href="../../Minizord/Http/AbstractMessage.html#method_getHeaders">
+<abbr title="Minizord\Http\AbstractMessage">AbstractMessage</abbr></a> at line 62</div>
+        <code>                    array
+    <strong>getHeaders</strong>()
+        </code>
+    </h3>
+    <div class="details">    
+    
+            
+
+        <div class="method-description">
+                            <p><p>Retornar os headers.</p></p>                        
+        </div>
+        <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>array</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_hasHeader">
+        <div class="location">in <a href="../../Minizord/Http/AbstractMessage.html#method_hasHeader">
+<abbr title="Minizord\Http\AbstractMessage">AbstractMessage</abbr></a> at line 72</div>
+        <code>                    bool
+    <strong>hasHeader</strong>(string $name)
+        </code>
+    </h3>
+    <div class="details">    
+    
+            
+
+        <div class="method-description">
+                            <p><p>Checa se um header existe ou não.</p></p>                        
+        </div>
+        <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>string</td>
+                <td>$name</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>bool</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_getHeader">
+        <div class="location">in <a href="../../Minizord/Http/AbstractMessage.html#method_getHeader">
+<abbr title="Minizord\Http\AbstractMessage">AbstractMessage</abbr></a> at line 84</div>
+        <code>                    array
+    <strong>getHeader</strong>(string $name)
+        </code>
+    </h3>
+    <div class="details">    
+    
+            
+
+        <div class="method-description">
+                            <p><p>Pega os valores de determinado header.</p></p>                        
+        </div>
+        <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>string</td>
+                <td>$name</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>array</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_getHeaderLine">
+        <div class="location">in <a href="../../Minizord/Http/AbstractMessage.html#method_getHeaderLine">
+<abbr title="Minizord\Http\AbstractMessage">AbstractMessage</abbr></a> at line 98</div>
+        <code>                    string
+    <strong>getHeaderLine</strong>(string $name)
+        </code>
+    </h3>
+    <div class="details">    
+    
+            
+
+        <div class="method-description">
+                            <p><p>Retorna os valores de determinado header em uma string.</p></p>                        
+        </div>
+        <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>string</td>
+                <td>$name</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>string</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_withHeader">
+        <div class="location">in <a href="../../Minizord/Http/AbstractMessage.html#method_withHeader">
+<abbr title="Minizord\Http\AbstractMessage">AbstractMessage</abbr></a> at line 109</div>
+        <code>                    <a href="../../Minizord/Http/AbstractMessage.html"><abbr title="Minizord\Http\AbstractMessage">AbstractMessage</abbr></a>
+    <strong>withHeader</strong>(string $name, string|string[] $value)
+        </code>
+    </h3>
+    <div class="details">    
+    
+            
+
+        <div class="method-description">
+                            <p><p>Retorna uma nova instância com o header passado.</p></p>                        
+        </div>
+        <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>string</td>
+                <td>$name</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td>string|string[]</td>
+                <td>$value</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td><a href="../../Minizord/Http/AbstractMessage.html"><abbr title="Minizord\Http\AbstractMessage">AbstractMessage</abbr></a></td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_withHeaders">
+        <div class="location">in <a href="../../Minizord/Http/AbstractMessage.html#method_withHeaders">
+<abbr title="Minizord\Http\AbstractMessage">AbstractMessage</abbr></a> at line 125</div>
+        <code>                    <a href="../../Minizord/Http/AbstractMessage.html"><abbr title="Minizord\Http\AbstractMessage">AbstractMessage</abbr></a>
+    <strong>withHeaders</strong>(array $headers)
+        </code>
+    </h3>
+    <div class="details">    
+    
+            
+
+        <div class="method-description">
+                            <p class="no-description">No description</p>
+                    
+        </div>
+        <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>array</td>
+                <td>$headers</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td><a href="../../Minizord/Http/AbstractMessage.html"><abbr title="Minizord\Http\AbstractMessage">AbstractMessage</abbr></a></td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_withAddedHeader">
+        <div class="location">in <a href="../../Minizord/Http/AbstractMessage.html#method_withAddedHeader">
+<abbr title="Minizord\Http\AbstractMessage">AbstractMessage</abbr></a> at line 139</div>
+        <code>                    <a href="../../Minizord/Http/AbstractMessage.html"><abbr title="Minizord\Http\AbstractMessage">AbstractMessage</abbr></a>
+    <strong>withAddedHeader</strong>(string $name, string|string[] $value)
+        </code>
+    </h3>
+    <div class="details">    
+    
+            
+
+        <div class="method-description">
+                            <p><p>Retorna uma nova instância com os valores passados adicionado ao header existente.</p></p>                        
+        </div>
+        <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>string</td>
+                <td>$name</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td>string|string[]</td>
+                <td>$value</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td><a href="../../Minizord/Http/AbstractMessage.html"><abbr title="Minizord\Http\AbstractMessage">AbstractMessage</abbr></a></td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_withoutHeader">
+        <div class="location">in <a href="../../Minizord/Http/AbstractMessage.html#method_withoutHeader">
+<abbr title="Minizord\Http\AbstractMessage">AbstractMessage</abbr></a> at line 160</div>
+        <code>                    <a href="../../Minizord/Http/AbstractMessage.html"><abbr title="Minizord\Http\AbstractMessage">AbstractMessage</abbr></a>
+    <strong>withoutHeader</strong>(string $name)
+        </code>
+    </h3>
+    <div class="details">    
+    
+            
+
+        <div class="method-description">
+                            <p><p>Retorna uma nova instância sem o header passado.</p></p>                        
+        </div>
+        <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>string</td>
+                <td>$name</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td><a href="../../Minizord/Http/AbstractMessage.html"><abbr title="Minizord\Http\AbstractMessage">AbstractMessage</abbr></a></td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_getBody">
+        <div class="location">in <a href="../../Minizord/Http/AbstractMessage.html#method_getBody">
+<abbr title="Minizord\Http\AbstractMessage">AbstractMessage</abbr></a> at line 171</div>
+        <code>                    <abbr title="Psr\Http\Message\StreamInterface">StreamInterface</abbr>
+    <strong>getBody</strong>()
+        </code>
+    </h3>
+    <div class="details">    
+    
+            
+
+        <div class="method-description">
+                            <p><p>Retorna a stream atual, ou uma nova caso não exista.</p></p>                        
+        </div>
+        <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td><abbr title="Psr\Http\Message\StreamInterface">StreamInterface</abbr></td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_withBody">
+        <div class="location">in <a href="../../Minizord/Http/AbstractMessage.html#method_withBody">
+<abbr title="Minizord\Http\AbstractMessage">AbstractMessage</abbr></a> at line 183</div>
+        <code>                    <a href="../../Minizord/Http/AbstractMessage.html"><abbr title="Minizord\Http\AbstractMessage">AbstractMessage</abbr></a>
+    <strong>withBody</strong>(<abbr title="Psr\Http\Message\StreamInterface">StreamInterface</abbr> $body)
+        </code>
+    </h3>
+    <div class="details">    
+    
+            
+
+        <div class="method-description">
+                            <p><p>Retorna uma nova instância com a stream passada.</p></p>                        
+        </div>
+        <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td><abbr title="Psr\Http\Message\StreamInterface">StreamInterface</abbr></td>
+                <td>$body</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td><a href="../../Minizord/Http/AbstractMessage.html"><abbr title="Minizord\Http\AbstractMessage">AbstractMessage</abbr></a></td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_inHeader">
+        <div class="location">in <a href="../../Minizord/Http/AbstractMessage.html#method_inHeader">
+<abbr title="Minizord\Http\AbstractMessage">AbstractMessage</abbr></a> at line 194</div>
+        <code>                    bool
+    <strong>inHeader</strong>(string $name, <abbr title="Minizord\Http\string|array">string|array</abbr> $values)
+        </code>
+    </h3>
+    <div class="details">    
+    
+            
+
+        <div class="method-description">
+                            <p><p>Retorna o header tem todos os valores passados.</p></p>                        
+        </div>
+        <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>string</td>
+                <td>$name</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td><abbr title="Minizord\Http\string|array">string|array</abbr></td>
+                <td>$values</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>bool</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_inHeaderAny">
+        <div class="location">in <a href="../../Minizord/Http/AbstractMessage.html#method_inHeaderAny">
+<abbr title="Minizord\Http\AbstractMessage">AbstractMessage</abbr></a> at line 218</div>
+        <code>                    bool
+    <strong>inHeaderAny</strong>(string $name, array $values)
+        </code>
+    </h3>
+    <div class="details">    
+    
+            
+
+        <div class="method-description">
+                            <p><p>Retorna de o header algum dos valores passados.</p></p>                        
+        </div>
+        <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>string</td>
+                <td>$name</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td>array</td>
+                <td>$values</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>bool</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_validateProtocolVersion">
+        <div class="location">in <a href="../../Minizord/Http/AbstractMessage.html#method_validateProtocolVersion">
+<abbr title="Minizord\Http\AbstractMessage">AbstractMessage</abbr></a> at line 240</div>
+        <code>            protected        void
+    <strong>validateProtocolVersion</strong>(string $version)
+        </code>
+    </h3>
+    <div class="details">    
+    
+            
+
+        <div class="method-description">
+                            <p><p>Valida a versão do protocolo.</p></p>                        
+        </div>
+        <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>string</td>
+                <td>$version</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>void</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_getOriginalHeaderName">
+        <div class="location">in <a href="../../Minizord/Http/AbstractMessage.html#method_getOriginalHeaderName">
+<abbr title="Minizord\Http\AbstractMessage">AbstractMessage</abbr></a> at line 254</div>
+        <code>            protected        <abbr title="Minizord\Http\string|null">string|null</abbr>
+    <strong>getOriginalHeaderName</strong>(string $name)
+        </code>
+    </h3>
+    <div class="details">    
+    
+            
+
+        <div class="method-description">
+                            <p><p>Retorna o nome original do header.</p></p>                        
+        </div>
+        <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>string</td>
+                <td>$name</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td><abbr title="Minizord\Http\string|null">string|null</abbr></td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_setHeaders">
+        <div class="location">in <a href="../../Minizord/Http/AbstractMessage.html#method_setHeaders">
+<abbr title="Minizord\Http\AbstractMessage">AbstractMessage</abbr></a> at line 262</div>
+        <code>            protected        void
+    <strong>setHeaders</strong>(array $headers, bool $merge = false)
+        </code>
+    </h3>
+    <div class="details">    
+    
+            
+
+        <div class="method-description">
+                            <p><p>Adiciona vários headers ou apenas os valores caso já exista.</p></p>                        
+        </div>
+        <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>array</td>
+                <td>$headers</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td>bool</td>
+                <td>$merge</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>void</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_getRequestTarget">
+        <div class="location">at line 29</div>
+        <code>                    string
+    <strong>getRequestTarget</strong>()
+        </code>
+    </h3>
+    <div class="details">    
+    
+            
+
+        <div class="method-description">
+                            <p><p>Retorna o destino da solicitação.</p></p>                        
+        </div>
+        <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>string</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_withRequestTarget">
+        <div class="location">at line 50</div>
+        <code>                    <a href="../../Minizord/Http/AbstractRequest.html"><abbr title="Minizord\Http\AbstractRequest">AbstractRequest</abbr></a>
+    <strong>withRequestTarget</strong>(string $requestTarget)
+        </code>
+    </h3>
+    <div class="details">    
+    
+            
+
+        <div class="method-description">
+                            <p><p>Retorna uma nova instância com o request-target passado.</p></p>                        
+        </div>
+        <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>string</td>
+                <td>$requestTarget</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td><a href="../../Minizord/Http/AbstractRequest.html"><abbr title="Minizord\Http\AbstractRequest">AbstractRequest</abbr></a></td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_getMethod">
+        <div class="location">at line 65</div>
+        <code>                    string
+    <strong>getMethod</strong>()
+        </code>
+    </h3>
+    <div class="details">    
+    
+            
+
+        <div class="method-description">
+                            <p><p>Retorna o método http da request.</p></p>                        
+        </div>
+        <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>string</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_withMethod">
+        <div class="location">at line 75</div>
+        <code>                    <a href="../../Minizord/Http/AbstractRequest.html"><abbr title="Minizord\Http\AbstractRequest">AbstractRequest</abbr></a>
+    <strong>withMethod</strong>(string $method)
+        </code>
+    </h3>
+    <div class="details">    
+    
+            
+
+        <div class="method-description">
+                            <p><p>Retorna uma nova instância com o método http passado.</p></p>                        
+        </div>
+        <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>string</td>
+                <td>$method</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td><a href="../../Minizord/Http/AbstractRequest.html"><abbr title="Minizord\Http\AbstractRequest">AbstractRequest</abbr></a></td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_getUri">
+        <div class="location">at line 92</div>
+        <code>                    <abbr title="Psr\Http\Message\UriInterface">UriInterface</abbr>
+    <strong>getUri</strong>()
+        </code>
+    </h3>
+    <div class="details">    
+    
+            
+
+        <div class="method-description">
+                            <p><p>Retorna a uri da request.</p></p>                        
+        </div>
+        <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td><abbr title="Psr\Http\Message\UriInterface">UriInterface</abbr></td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_withUri">
+        <div class="location">at line 102</div>
+        <code>                    <a href="../../Minizord/Http/AbstractRequest.html"><abbr title="Minizord\Http\AbstractRequest">AbstractRequest</abbr></a>
+    <strong>withUri</strong>(<abbr title="Psr\Http\Message\UriInterface">UriInterface</abbr> $uri, bool $preserveHost = false)
+        </code>
+    </h3>
+    <div class="details">    
+    
+            
+
+        <div class="method-description">
+                            <p><p>Retorna uma nova instância com a uri passada.</p></p>                        
+        </div>
+        <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td><abbr title="Psr\Http\Message\UriInterface">UriInterface</abbr></td>
+                <td>$uri</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td>bool</td>
+                <td>$preserveHost</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td><a href="../../Minizord/Http/AbstractRequest.html"><abbr title="Minizord\Http\AbstractRequest">AbstractRequest</abbr></a></td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_setHostFromUri">
+        <div class="location">at line 120</div>
+        <code>            protected        void
+    <strong>setHostFromUri</strong>()
+        </code>
+    </h3>
+    <div class="details">    
+    
+            
+
+        <div class="method-description">
+                            <p><p>Seta o host baseado no host da Uri.</p></p>                        
+        </div>
+        <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>void</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_validateMethod">
+        <div class="location">at line 140</div>
+        <code>            protected        void
+    <strong>validateMethod</strong>(string $method)
+        </code>
+    </h3>
+    <div class="details">    
+    
+            
+
+        <div class="method-description">
+                            <p><p>Valida o método http.</p></p>                        
+        </div>
+        <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>string</td>
+                <td>$method</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>void</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_init">
+        <div class="location">at line 152</div>
+        <code>            protected        void
+    <strong>init</strong>(string $method = &#039;GET&#039;, <abbr title="Minizord\Http\Psr\Http\Message\UriInterface|string">UriInterface|string</abbr> $uri = &#039;&#039;, array $headers = [], string $version = &#039;1.1&#039;, mixed $body = null)
+        </code>
+    </h3>
+    <div class="details">    
+    
+            
+
+        <div class="method-description">
+                            <p><p>Configura os dados na request.</p></p>                        
+        </div>
+        <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>string</td>
+                <td>$method</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td><abbr title="Minizord\Http\Psr\Http\Message\UriInterface|string">UriInterface|string</abbr></td>
+                <td>$uri</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td>array</td>
+                <td>$headers</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td>string</td>
+                <td>$version</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td>mixed</td>
+                <td>$body</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>void</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+            
+                    </div>
+    </div>
+
+            </div>
+            </div>
+
+    
+</div><div id="footer">
+        Generated by <a href="https://github.com/code-lts/doctum">Doctum, a API Documentation generator and fork of Sami</a>.</div></div>
+    </div>
+    </body>
+
+</html>

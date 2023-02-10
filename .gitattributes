@@ -1,0 +1,7 @@
+/tests export-ignore
+/docs export-ignore
+doctum.phar export-ignore
+doc.php export-ignore
+phpinsights.php export-ignore
+phpunit.xml export-ignore
+.php-cs-fixer.php export-ignore
