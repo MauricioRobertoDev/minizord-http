@@ -1,11 +1,7 @@
 .phpunit.result.cache
 composer.lock
 coverage
-docs
 vendor
 .php-cs-fixer.cache
 build
-doctum.phar
-doc
 cache
-doc.php
